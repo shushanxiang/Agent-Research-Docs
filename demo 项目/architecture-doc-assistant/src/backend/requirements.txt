@@ -1,0 +1,47 @@
+# ── 后端 Python 依赖 ──
+# FastAPI
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.9
+
+# 数据层
+sqlalchemy[asyncio]>=2.0
+asyncpg>=0.29.0
+psycopg2-binary>=2.9
+alembic>=1.13
+
+# Redis
+redis>=5.0
+celery[redis]>=5.3
+
+# 向量数据库
+chromadb>=0.4.22
+
+# Embedding
+sentence-transformers>=2.6.0
+
+# LLM
+dashscope>=1.17
+langchain>=0.1
+langchain-community>=0.0.20
+
+# 对象存储
+minio>=7.2
+
+# 安全
+python-jose[cryptography]>=3.3
+passlib[bcrypt]>=1.7
+python-multipart
+
+# 配置
+pydantic-settings>=2.1
+
+# 工具
+httpx>=0.26
+aiofiles>=23.2
+python-docx>=0.8
+
+# 测试
+pytest>=8.0
+pytest-asyncio>=0.23
+httpx>=0.26

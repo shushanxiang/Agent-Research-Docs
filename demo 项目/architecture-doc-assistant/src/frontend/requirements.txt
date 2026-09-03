@@ -1,0 +1,5 @@
+# ── 前端 Streamlit 依赖 ──
+streamlit>=1.30
+httpx>=0.26
+python-docx>=0.8
+Pillow>=10.2

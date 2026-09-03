@@ -1,0 +1,152 @@
+# ============================================================
+# 建筑智能文档助手 — Docker Compose 开发环境
+# ============================================================
+
+version: '3.8'
+
+services:
+  # ── API 服务 ──
+  api:
+    build: ../backend
+    container_name: building-arch-api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:XX@postgres:5432/building_docs
+      - REDIS_URL=redis://redis:6379/0
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+      - MINERU_API_URL=http://mineru:8001
+      - MINIO_ENDPOINT=minio:9000
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      chroma:
+        condition: service_started
+    volumes:
+      - ../data/uploads:/app/uploads
+      - ../data/models:/app/models
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ── Streamlit 前端 ──
+  frontend:
+    build: ../frontend
+    container_name: building-arch-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE_URL=http://api:8000
+    depends_on:
+      - api
+
+  # ── MinerU 解析服务 (GPU) ──
+  mineru:
+    build: ../services/mineru
+    container_name: building-arch-mineru
+    ports:
+      - "8001:8001"
+    volumes:
+      - ../data/models:/app/models
+      - ../data/temp:/app/temp
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # ── Celery Worker ──
+  worker:
+    build: ../backend
+    container_name: building-arch-worker
+    command: celery -A tasks.parse worker --loglevel=info --concurrency=4
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:XX@postgres:5432/building_docs
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+      - postgres
+    volumes:
+      - ../data/uploads:/app/uploads
+      - ../data/temp:/app/temp
+
+  # ── Celery Beat 定时任务 ──
+  scheduler:
+    build: ../backend
+    container_name: building-arch-scheduler
+    command: celery -A tasks.parse beat --loglevel=info
+    depends_on:
+      - redis
+
+  # ── PostgreSQL ──
+  postgres:
+    image: postgres:15
+    container_name: building-arch-postgres
+    environment:
+      POSTGRES_DB: building_docs
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: XX
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d building_docs"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Redis ──
+  redis:
+    image: redis:7-alpine
+    container_name: building-arch-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # ── Chroma 向量数据库 ──
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: building-arch-chroma
+    ports:
+      - "8002:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+
+  # ── MinIO 对象存储 ──
+  minio:
+    image: minio/minio
+    container_name: building-arch-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: XX
+      MINIO_ROOT_PASSWORD: XX
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  postgres_data:
+  redis_data:
+  chroma_data:
+  minio_data:

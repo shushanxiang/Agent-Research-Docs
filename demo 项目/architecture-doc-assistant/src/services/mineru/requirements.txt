@@ -1,0 +1,9 @@
+# ── MinerU 解析服务依赖 ──
+# 注：MinerU 需要单独的 Python 环境，GPU 推荐
+magic-pdf>=0.1.0
+torch>=2.1
+transformers>=4.36
+fastapi>=0.110.0
+uvicorn>=0.27.0
+Pillow>=10.2
+opencv-python-headless>=4.8

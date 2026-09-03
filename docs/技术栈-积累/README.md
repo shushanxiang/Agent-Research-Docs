@@ -1,0 +1,83 @@
+## 不断精进自己的技术栈ing…
+
+编程语言：Python 是Agent开发领域的绝对主流，几乎所有的框架和工具都以它为核心。
+后端基础：包括API设计与调用、数据库基础、Git版本控制，以及Linux操作系统和Docker等基础知识。这些是将Agent能力“产品化”和“服务化”的基石。
+
+### 大模型与提示词工程
+这是Agent的“大脑”和“思维”基础。
+大模型（LLM）API调用：调用如OpenAI、Anthropic或国内的通义千问等大模型的API，是构建所有AI应用的起点。需要掌握流式输出和多模态输入等能力。
+提示词工程（Prompt Engineering）：这是与LLM高效沟通的核心技能。需要系统学习CoT（思维链）、ReAct等设计模式，让模型能进行更复杂的推理。
+
+### Agent核心开发框架
+这是Agent开发的“脚手架”，负责将“大脑”（LLM）与“手脚”（工具、记忆）串联起来。
+LangChain：目前最主流、生态最完善的框架。它提供了一套标准化的组件（如Memory、Tools），让你能像搭积木一样构建Agent。
+LangGraph：作为LangChain的扩展，它解决了复杂工作流中需要循环和分支的问题。通过“图”结构（Graph）来编排Agent的步骤，能构建更强大的多步推理Agent。
+LlamaIndex：这是一个专注于数据框架的库，尤其在构建RAG（检索增强生成） 应用方面非常强大。
+其他框架：
+AutoGen：微软出品，在多智能体协作（Multi-Agent）场景下表现出色。
+CrewAI：同样是构建多智能体系统的热门选择。
+Semantic Kernel：微软的另一个SDK，支持Python、C#等多种语言。
+
+### 记忆与知识库（RAG）
+这部分让Agent不仅“聪明”，而且“博学”，能访问和记住私有或实时数据。
+向量数据库：用于存储和检索文本的“向量”表示，是实现长期记忆和知识库的核心。需要学习如Chroma、Milvus或Pinecone等。
+RAG（检索增强生成）：这是当前企业级应用的热点。你需要掌握其核心流程：检索 -> 增强 -> 生成，包括文档解析、文本分块（Chunking）、Embedding等。
+记忆机制（Memory）：理解如何管理Agent的短期记忆（对话上下文）和长期记忆（向量数据库存储）。
+
+### 工具与生态系统（MCP）
+这是让Agent从“只会说”到“会做事”的关键。
+工具调用（Function Calling / Tool Calling）：这是Agent与外部世界交互的核心能力。你需要学习如何将任何API、本地函数或第三方服务封装成一个“工具”，让大模型可以调用。
+MCP（模型上下文协议）：一个新兴的开放标准，旨在让AI应用与外部数据源和工具之间的连接更加标准化。
+
+### 多智能体协作
+当单个Agent处理复杂任务力不从心时，可以让多个Agent各司其职，协作完成。
+多Agent模式：需要学习如Manager-Worker（管理者-工作者）、专家小组等协作模式。
+相关框架：AutoGen、CrewAI和LangGraph都对此有很好的支持。
+
+### 工程化与部署
+这是将你的Agent从“Demo”变为“产品”的最后一公里。
+可观测性：使用LangSmith等工具进行调试、监控和性能追踪。
+评估体系（Eval）：建立自动化测试集，使用Ragas等框架量化Agent的表现，确保其输出质量和稳定性。
+鲁棒性与安全：设计熔断机制防止Agent陷入死循环或产生幻觉，并做好日志、权限与安全评估。
+部署：将Agent服务化，可以使用 Flask/FastAPI 等框架封装成API，并用 Docker 进行容器化部署。
+
+### 学习路径建议
+从低代码/无代码平台入手：可以先从 Coze或 Dify这类平台开始，通过可视化方式快速搭建一个Agent，直观理解其工作流。
+深入一个核心框架：然后选择 LangChain 或 LlamaIndex 深入学习，用代码实现一个带RAG和工具调用的Agent。
+进阶复杂场景：最后，学习 LangGraph 或 AutoGen 来处理复杂工作流和多智能体协作。
+工程化落地：将你的Agent应用容器化、服务化，并建立评估和监控体系。
+
+------------------------------------
+------------------------------------
+### 后端：
+#### 编程语言与核心框架
+Python :  
+FastAPI    FastAPI 是现代高性能异步框架，自动生成文档，非常适合数据科学、机器学习相关API
+Flask    Flask 轻量灵活，适合微服务或简单API
+
+
+#### 数据库与ORM/ODM：
+关系型数据库：
+PostgreSQL 和 MySQL 是主流选择，适合数据结构稳定、需要ACID事务保证的场景。
+NoSQL数据库：
+MongoDB 适合文档型、灵活Schema的数据；Redis 作为内存数据库，主要用于缓存、会话管理等，以提升性能。
+ORM/ODM (对象关系映射/对象文档映射)：它们能让你用代码操作数据库，而不是写SQL，提高开发效率。
+Python: SQLAlchemy
+
+#### 认证、授权与安全
+认证 (Authentication)：JWT (JSON Web Token) 是目前最流行的无状态认证方案。
+授权 (Authorization)：基于角色的访问控制 (RBAC) 是常见的实现模式。
+安全实践：包括使用 HTTPS 加密、密码哈希 (如bcrypt)、限流 (Rate Limiting)、CORS 配置以及参数化查询以防止SQL注入。
+
+#### API文档与测试
+文档：OpenAPI (Swagger) 规范是事实上的标准，许多框架如 FastAPI、NestJS 都能自动生成交互式文档。
+测试：单元测试、集成测试和端到端测试是保证质量的基石。常用工具包括 Jest (Node.js), Pytest (Python), JUnit (Java) 等。
+
+#### API类型与通信协议
+RESTful API
+
+#### 基础设施与部署
+容器化：Docker 是目前最通用的应用打包和分发方式。
+API网关：在微服务架构中，Nginx、Envoy 或 Ocelot 等可作为统一的流量入口，处理路由、限流、认证等跨横切关注点。
+日志与监控：结构化日志（如 Pino）和监控告警系统（如 Prometheus + Grafana）是保障线上服务稳定的关键。
+

@@ -4,7 +4,7 @@ author：书山香
 
 ### **Copilot AI项目**
 
-**设计理念：** 业务系统API化, AI动态组装并执行
+**设计理念：** 业务系统API化, AI智能组装并执行
 
 **技术栈：** Python / Flask / MongoDB / Milvus / rerank-v2 / text-embedding-v3 / LLM API / Pydantic / JWT / pytest
 

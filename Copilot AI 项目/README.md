@@ -2,6 +2,8 @@
 
 Copilot AI项目
 
+设计理念：业务系统API化
+
 技术栈：Python / Flask / MongoDB / Milvus / rerank-v2 / text-embedding-v3 / LLM API / Pydantic / JWT / pytest
 
 项目简介：一款让用户用「自然语言」即可驱动多个跨业务系统工具（API）完成多步操作的智能体应用，解决"业务人员来回切换多个跨系统操作"的痛点，核心打磨"可靠、可控、可评估"。

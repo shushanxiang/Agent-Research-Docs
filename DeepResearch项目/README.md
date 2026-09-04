@@ -2,6 +2,8 @@
 
 DeepResearch —— 基于 LangGraph 的深度研究多 Agent 应用
 
+设计理念：让专家团帮写高质量报告
+
 技术栈：LangGraph / LangChain / FastAPI / Redis Streams / Milvus / PostgreSQL / React 19 + TypeScript / Docker
 
 项目简介：面向价值可追溯文档，将用户模糊的研究需求通过[严谨专业的自动化研究流程]转化为带引用溯源的专业研究报告，解决大模型回答「不可控、不可追溯、质量难评估」三大痛点。

@@ -1,0 +1,15 @@
+:root {
+  --primary-bg: #ffffff;
+  --text-color: #1f1f1f;
+}
+
+[data-theme="dark"] {
+  --primary-bg: #1f1f1f;
+  --text-color: rgba(255, 255, 255, 0.85);
+}
+
+body {
+  background: var(--primary-bg);
+  color: var(--text-color);
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}

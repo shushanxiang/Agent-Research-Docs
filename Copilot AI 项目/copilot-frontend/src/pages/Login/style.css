@@ -1,0 +1,109 @@
+.login-container {
+  background: #f0f2f5;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:  #3b69a9;
+}
+
+.login-card {
+  width: 30%;
+  min-width: 400px;
+  padding: 40px;
+  background: #ffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  position: relative;
+}
+
+.login-card::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    rgba(78, 205, 196, 0) 0%,
+    rgba(78, 205, 196, 0.3) 50%,
+    rgba(78, 205, 196, 0) 100%
+  );
+  z-index: -1;
+  animation: glow 3s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+.neon-title {
+  color: #1890ff;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+}
+
+.neon-title.white-text {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.white-placeholder::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.dark-input.white-placeholder {
+  color: #fff !important;
+}
+
+.dark-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(78, 205, 196, 0.3) !important;
+  color: #fff !important;
+  border-radius: 6px;
+  padding: 10px 15px;
+}
+
+.dark-input:hover,
+.dark-input:focus {
+  border-color: #4ecdc4 !important;
+  box-shadow: 0 0 8px rgba(78, 205, 196, 0.3) !important;
+}
+
+.login-btn {
+  background: #1890ff;
+  border: none;
+  height: 40px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+}
+
+@keyframes glow {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+.register-link {
+  margin-top: 20px;
+  text-align: center;
+  color: #000000;
+}
+
+.register-link a {
+  color: #4ecdc4;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 8px rgba(78, 205, 196, 0.3);
+}

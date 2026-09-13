@@ -1,0 +1,24 @@
+/* 科技感卡片效果 */
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* 表格悬浮效果 */
+.neo-table tr:hover td {
+  background: rgba(24, 144, 255, 0.05) !important;
+  transform: translateX(4px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 按钮动态效果 */
+.hover-scale {
+  transition: transform 0.2s;
+}
+.hover-scale:hover {
+  transform: scale(1.1);
+}

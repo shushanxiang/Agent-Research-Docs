@@ -1,0 +1,1 @@
+export const BaseRoot = process.env.COPILOT_BACK_BASE_URL || 'http://localhost:5001'

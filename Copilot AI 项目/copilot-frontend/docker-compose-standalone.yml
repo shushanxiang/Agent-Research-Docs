@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  # 前端服务（独立部署）
+  frontend-hil:
+    container_name: copilot-frontend-hil
+    image: copilot-frontend-hil
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - COPILOT_BACK_BASE_URL=http://host.docker.internal:5001  # 连接到宿主机的后端
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

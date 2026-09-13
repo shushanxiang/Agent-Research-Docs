@@ -1,0 +1,35 @@
+.hero-section {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-logo {
+  width: 480px;
+  filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.5));
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.button-group {
+  flex-direction: row;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.login-btn{
+  width: 160px;
+  height: 24px;
+}
+
+.register-btn {
+  width: 160px;
+  height: 24px;
+}

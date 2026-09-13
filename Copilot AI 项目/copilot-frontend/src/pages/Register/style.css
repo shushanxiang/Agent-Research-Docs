@@ -1,0 +1,79 @@
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:#3b69a9 ;
+}
+
+.register-card {
+  width: 35%;
+  min-width: 420px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  position: relative;
+}
+
+.register-card::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    rgba(78, 205, 196, 0) 0%,
+    rgba(78, 205, 196, 0.3) 50%,
+    rgba(78, 205, 196, 0) 100%
+  );
+  z-index: -1;
+  animation: glow 3s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.login-link a {
+  color: #4ecdc4;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 8px;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+  text-shadow: 0 0 8px rgba(78, 205, 196, 0.3);
+}
+
+.register-btn {
+  margin-top: 20px;
+  background: linear-gradient(45deg, #4ecdc4, #45b7af);
+  border: none;
+  height: 40px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+}
+
+.neon-title {
+  color: #1890ff;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+}
+
+.neon-title.white-text {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}

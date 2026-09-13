@@ -1,0 +1,73 @@
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 16px;
+}
+
+.toolbar-right {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* 保持原有按钮样式 */
+.danger-btn {
+  background: linear-gradient(45deg, #ff4d4f, #c41f1f);
+  border: 1px solid #ff7875;
+}
+
+.upload-btn {
+  background: linear-gradient(45deg, #1890ff, #0050b3);
+  border: 1px solid #40a9ff;
+  box-shadow: 0 0 8px rgba(24, 144, 255, 0.3);
+}
+
+/* 悬停动画效果 */
+.ant-btn:hover {
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+/* 表格整体样式 */
+.api-table {
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/* 表头样式 */
+.ant-table-thead > tr > th {
+  background: linear-gradient(45deg, #1a1a2e, #16213e);
+  color: #00ffff!important;
+  font-size: 16px;
+  border-bottom: 2px solid #00ffff;
+}
+
+/* 表格行样式 */
+.table-row {
+  background: rgba(16, 24, 39, 0.8);
+  transition: all 0.3s;
+}
+
+.table-row:hover td {
+  background: rgba(255,255,255,0.05)!important;
+  transform: translateX(8px);
+}
+
+/* 操作按钮间距 */
+.ant-table-cell .ant-btn {
+  margin: 0 4px;
+  padding: 8px 12px;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .api-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+}

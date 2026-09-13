@@ -1,0 +1,188 @@
+[
+    {
+        "Query": "添加一个新的产品条目，名称为麻辣香锅堡，定价为8元，分类为汉堡类",
+        "API": "add_product",
+        "Parameter": {
+            "name": "麻辣香锅堡",
+            "price": "8元",
+            "category": "汉堡类"
+        }
+    },
+    {
+        "Query": "将奥尔良鸡腿堡的广告投放到facebook和youtube渠道，生效日期为本年度9.1-12.31",
+        "API": "advertise",
+        "Parameter": {
+            "product": "奥尔良鸡腿堡",
+            "channels": "facebook和youtube",
+            "start": "本年度9.1",
+            "end": "12.31"
+        }
+    },
+    {
+        "Query": "撤销奥尔良鸡腿堡目前的促销活动",
+        "API": "cancel_promotion",
+        "Parameter": {
+            "product": "奥尔良鸡腿堡"
+        }
+    },
+    {
+        "Query": "取消当前交易，理由为库存不足",
+        "API": "cancel_transaction",
+        "Parameter": {
+            "transaction_id": "当前交易",
+            "reason": "库存不足"
+        }
+    },
+    {
+        "Query": "展示本季度的销量曲线，和上季度进行环比",
+        "API": "display_sales",
+        "Parameter": {
+            "period": "本季度",
+            "content": "销量曲线",
+            "remark": "和上季度进行环比"
+        }
+    },
+    {
+        "Query": "展示本月各个商品的销量比例，以百分比饼图的形式展现",
+        "API": "display_sales",
+        "Parameter": {
+            "period": "本月",
+            "content": "各个商品的销量比例",
+            "remark": "以百分比饼图的形式展现"
+        }
+    },
+    {
+        "Query": "为所有本月生日会员发放10元电子代金券，有效期为半年",
+        "API": "gift",
+        "Parameter": {
+            "receiver": "本月生日会员",
+            "gift": "10元电子代金券",
+            "period": "半年",
+            "condition": "None"
+        }
+    },
+    {
+        "Query": "为所有会员添加一张优惠券，在9月内购买100元以上商品均可以打九折",
+        "API": "gift",
+        "Parameter": {
+            "receiver": "所有会员",
+            "gift": "优惠券",
+            "period": "9月内",
+            "condition": "购买100元以上商品均可以打九折"
+        }
+    },
+    {
+        "Query": "为编号为12314的交易记录开具一个普通发票",
+        "API": "invoice",
+        "Parameter": {
+            "transaction_id": "12314",
+            "type": "普通发票"
+        }
+    },
+    {
+        "Query": "从9.1开始上架新产品麻辣香锅堡",
+        "API": "launch_product",
+        "Parameter": {
+            "time": "9.1",
+            "product_id": "麻辣香锅堡"
+        }
+    },
+    {
+        "Query": "处理顾客张三的退货申请，交易id为11243254, 全额退款",
+        "API": "process_returns",
+        "Parameter": {
+            "customer": "张三",
+            "transaction_id": "11243254",
+            "process": "全额退款"
+        }
+    },
+    {
+        "Query": "为奥尔良鸡腿堡设置9折促销，促销日期从明天开始到9.30结束",
+        "API": "promotion",
+        "Parameter": {
+            "start": "明天",
+            "end": "9.30",
+            "sale": "9折促销",
+            "product_id": "奥尔良鸡腿堡"
+        }
+    },
+    {
+        "Query": "为注册日期一年以上的会员推送新产品麻辣香锅堡的促销信息",
+        "API": "push_notifications",
+        "Parameter": {
+            "receiver": "注册日期一年以上的会员",
+            "content": "新产品麻辣香锅堡的促销信息"
+        }
+    },
+    {
+        "Query": "对所有商品按照退货次数从高到低进行排序",
+        "API": "query_product",
+        "Parameter": {
+            "query": "所有商品",
+            "sorting_index": "退货次数",
+            "reverse": "从高到低"
+        }
+    },
+    {
+        "Query": "查询目前参与促销活动的销量前十的商品",
+        "API": "query_product",
+        "Parameter": {
+            "query": "目前参与促销活动的销量前十的商品",
+            "sorting_index": "None",
+            "reverse": "None"
+        }
+    },
+    {
+        "Query": "将奥尔良鸡腿堡从早餐目录中移除",
+        "API": "remove_from_menu",
+        "Parameter": {
+            "product": "奥尔良鸡腿堡",
+            "menu": "早餐目录"
+        }
+    },
+    {
+        "Query": "为iphone13 256gb 黑色版本增加库存100件",
+        "API": "update_product",
+        "Parameter": {
+            "product_id": "iphone13 256gb 黑色版本",
+            "operation": "增加库存",
+            "content": "100件"
+        }
+    },
+    {
+        "Query": "为标号为ax123124的女裙添加一个新的颜色选项为蓝色",
+        "API": "update_product",
+        "Parameter": {
+            "product_id": "ax123124",
+            "operation": "添加一个新的颜色",
+            "content": "蓝色"
+        }
+    },
+    {
+        "Query": "更新标号为 ax23423商品的库存显示量为200",
+        "API": "update_product",
+        "Parameter": {
+            "product_id": "ax23423",
+            "operation": "库存显示量",
+            "content": "200"
+        }
+    },
+    {
+        "Query": "为所有重量为5kg以下的商品设置默认运费为免费，仅限国内运送",
+        "API": "update_shipping",
+        "Parameter": {
+            "product": "重量为5kg以下的商品",
+            "price": "免费",
+            "range": "国内运送"
+        }
+    },
+    {
+        "Query": "为编号为ab13343的货物更新运费为10元，限国内运送",
+        "API": "update_shipping",
+        "Parameter": {
+            "product": "ab13343",
+            "price": "10元",
+            "range": "国内运送"
+        }
+    }
+]

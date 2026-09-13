@@ -1,0 +1,149 @@
+[
+    {
+        "raw_data": {
+            "Query": "添加一个新的产品条目，名称为麻辣香锅堡，定价为8元，分类为汉堡类",
+            "API": "add_product"
+        },
+        "test_result": "add_product"
+    },
+    {
+        "raw_data": {
+            "Query": "将奥尔良鸡腿堡的广告投放到facebook和youtube渠道，生效日期为本年度9.1-12.31",
+            "API": "advertise"
+        },
+        "test_result": "advertise"
+    },
+    {
+        "raw_data": {
+            "Query": "撤销奥尔良鸡腿堡目前的促销活动",
+            "API": "cancel_promotion"
+        },
+        "test_result": "promotion"
+    },
+    {
+        "raw_data": {
+            "Query": "取消当前交易，理由为库存不足",
+            "API": "cancel_transaction"
+        },
+        "test_result": "cancel_transaction"
+    },
+    {
+        "raw_data": {
+            "Query": "展示本季度的销量曲线，和上季度进行环比",
+            "API": "display_sales"
+        },
+        "test_result": "display_sales"
+    },
+    {
+        "raw_data": {
+            "Query": "展示本月各个商品的销量比例，以百分比饼图的形式展现",
+            "API": "display_sales"
+        },
+        "test_result": "display_sales"
+    },
+    {
+        "raw_data": {
+            "Query": "为所有本月生日会员发放10元电子代金券，有效期为半年",
+            "API": "gift"
+        },
+        "test_result": "gift"
+    },
+    {
+        "raw_data": {
+            "Query": "为所有会员添加一张优惠券，在9月内购买100元以上商品均可以打九折",
+            "API": "gift"
+        },
+        "test_result": "promotion"
+    },
+    {
+        "raw_data": {
+            "Query": "为编号为12314的交易记录开具一个普通发票",
+            "API": "invoice"
+        },
+        "test_result": "invoice"
+    },
+    {
+        "raw_data": {
+            "Query": "从9.1开始上架新产品麻辣香锅堡",
+            "API": "launch_product"
+        },
+        "test_result": "launch_product"
+    },
+    {
+        "raw_data": {
+            "Query": "处理顾客张三的退货申请，交易id为11243254, 全额退款",
+            "API": "process_returns"
+        },
+        "test_result": "process_returns"
+    },
+    {
+        "raw_data": {
+            "Query": "为奥尔良鸡腿堡设置9折促销，促销日期从明天开始到9.30结束",
+            "API": "promotion"
+        },
+        "test_result": "promotion"
+    },
+    {
+        "raw_data": {
+            "Query": "为注册日期一年以上的会员推送新产品麻辣香锅堡的促销信息",
+            "API": "push_notifications"
+        },
+        "test_result": "push_notifications"
+    },
+    {
+        "raw_data": {
+            "Query": "对所有商品按照退货次数从高到低进行排序",
+            "API": "query_product"
+        },
+        "test_result": "process_returns"
+    },
+    {
+        "raw_data": {
+            "Query": "查询目前参与促销活动的销量前十的商品",
+            "API": "query_product"
+        },
+        "test_result": "promotion"
+    },
+    {
+        "raw_data": {
+            "Query": "将奥尔良鸡腿堡从早餐目录中移除",
+            "API": "remove_from_menu"
+        },
+        "test_result": "remove_from_menu"
+    },
+    {
+        "raw_data": {
+            "Query": "为iphone13 256gb 黑色版本增加库存100件",
+            "API": "update_product"
+        },
+        "test_result": "update_product"
+    },
+    {
+        "raw_data": {
+            "Query": "为标号为ax123124的女裙添加一个新的颜色选项为蓝色",
+            "API": "update_product"
+        },
+        "test_result": "add_product"
+    },
+    {
+        "raw_data": {
+            "Query": "更新标号为 ax23423商品的库存显示量为200",
+            "API": "update_product"
+        },
+        "test_result": "update_product"
+    },
+    {
+        "raw_data": {
+            "Query": "为所有重量为5kg以下的商品设置默认运费为免费，仅限国内运送",
+            "API": "update_shipping"
+        },
+        "test_result": "push_notifications"
+    },
+    {
+        "raw_data": {
+            "Query": "为编号为ab13343的货物更新运费为10元，限国内运送",
+            "API": "update_shipping"
+        },
+        "test_result": "update_shipping"
+    }
+]

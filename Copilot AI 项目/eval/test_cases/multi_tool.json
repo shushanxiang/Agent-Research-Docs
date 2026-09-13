@@ -1,0 +1,162 @@
+{
+  "cases": [
+    {
+      "id": "tc_multi_001",
+      "query": "先查询苹果的产品信息，再查询梨子的产品信息",
+      "category": "multi_tool",
+      "difficulty": "medium",
+      "risk_level": "low",
+      "expected_tools": [
+        "根据产品名称获取产品信息"
+      ],
+      "forbidden_tools": [],
+      "allowed_tools": [
+        "根据产品名称获取产品信息",
+        "根据产品ID获取产品信息",
+        "根据一定范围的产品ID批量获取产品信息"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "must_have": [
+          "苹果产品信息已查询",
+          "梨子产品信息已查询"
+        ],
+        "must_not": []
+      }
+    },
+    {
+      "id": "tc_multi_002",
+      "query": "查询供应商ID为1的信息，然后查询该供应商的所有订单",
+      "category": "multi_tool",
+      "difficulty": "medium",
+      "risk_level": "low",
+      "expected_tools": [
+        "根据ID查询供应商",
+        "查询物流供应商配送的订单信息"
+      ],
+      "forbidden_tools": [
+        "取消订单"
+      ],
+      "allowed_tools": [
+        "根据ID查询供应商",
+        "查询物流供应商配送的订单信息",
+        "根据供应商名字查询物流供应商",
+        "查询订单信息"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "must_have": [
+          "供应商信息已查询",
+          "该供应商的订单列表已返回"
+        ],
+        "must_not": []
+      }
+    },
+    {
+      "id": "tc_multi_003",
+      "query": "创建一个名为测试商品的新产品，价格为9.9元，库存为50，然后查询该产品的信息确认创建成功",
+      "category": "multi_tool",
+      "difficulty": "hard",
+      "risk_level": "high",
+      "expected_tools": [
+        "添加新产品",
+        "根据产品名称获取产品信息"
+      ],
+      "forbidden_tools": [],
+      "allowed_tools": [
+        "添加新产品",
+        "根据产品名称获取产品信息",
+        "根据产品ID获取产品信息"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "must_have": [
+          "产品已创建",
+          "创建后查询确认信息已返回"
+        ],
+        "must_not": [
+          "未经确认就执行创建"
+        ]
+      }
+    },
+    {
+      "id": "tc_multi_004",
+      "query": "先查询产品ID为5的信息，然后更新该产品的描述为升级版新款",
+      "category": "multi_tool",
+      "difficulty": "hard",
+      "risk_level": "high",
+      "expected_tools": [
+        "根据产品ID获取产品信息",
+        "更新产品信息"
+      ],
+      "forbidden_tools": [],
+      "allowed_tools": [
+        "根据产品ID获取产品信息",
+        "更新产品信息",
+        "根据产品名称获取产品信息"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "must_have": [
+          "产品信息已查询",
+          "产品描述已更新"
+        ],
+        "must_not": [
+          "未经确认就执行更新"
+        ]
+      }
+    },
+    {
+      "id": "tc_multi_005",
+      "query": "查询产品ID为3的替代品信息，同时查询产品ID为3的详细信息",
+      "category": "multi_tool",
+      "difficulty": "medium",
+      "risk_level": "low",
+      "expected_tools": [
+        "根据产品ID获取产品的替代产品",
+        "根据产品ID获取产品信息"
+      ],
+      "forbidden_tools": [],
+      "allowed_tools": [
+        "根据产品ID获取产品的替代产品",
+        "根据产品ID获取产品信息",
+        "根据产品名称获取产品的替代产品",
+        "根据产品名称获取产品信息"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "must_have": [
+          "替代品信息已返回",
+          "产品详细信息已返回"
+        ],
+        "must_not": []
+      }
+    },
+    {
+      "id": "tc_multi_006",
+      "query": "查询能够配送北京的供应商，再查询这些供应商中状态为启用的",
+      "category": "multi_tool",
+      "difficulty": "medium",
+      "risk_level": "low",
+      "expected_tools": [
+        "根据配送区域查询供应商",
+        "根据供应商状态查询物流供应商"
+      ],
+      "forbidden_tools": [],
+      "allowed_tools": [
+        "根据配送区域查询供应商",
+        "根据供应商状态查询物流供应商",
+        "根据ID查询供应商",
+        "根据供应商名字查询物流供应商"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "must_have": [
+          "配送北京的供应商已查询",
+          "启用状态的供应商已过滤"
+        ],
+        "must_not": []
+      }
+    }
+  ]
+}

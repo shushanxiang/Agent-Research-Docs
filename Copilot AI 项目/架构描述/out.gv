@@ -1,0 +1,330 @@
+digraph G {
+concentrate=true;
+splines="ortho";
+rankdir="LR";
+subgraph legend{
+    rank = min;
+    label = "legend";
+    Legend [shape=none, margin=0, label = <
+        <table cellspacing="0" cellpadding="0" border="1"><tr><td>Code2flow Legend</td></tr><tr><td>
+        <table cellspacing="0">
+        <tr><td>Regular function</td><td width="50px" bgcolor='#cccccc'></td></tr>
+        <tr><td>Trunk function (nothing calls this)</td><td bgcolor='#966F33'></td></tr>
+        <tr><td>Leaf function (this calls nothing else)</td><td bgcolor='#6db33f'></td></tr>
+        <tr><td>Function call</td><td><font color='black'>&#8594;</font></td></tr>
+        </table></td></tr></table>
+        >];
+}node_606dd859 [label="0: (global)()" name="api_planning_hub::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_bfff3ae5 [label="28: __init__()" name="api_planning_hub::ApiPlanningHub.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_70afae84 [label="304: api_planning()" name="api_planning_hub::ApiPlanningHub.api_planning" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_6d63305b [label="50: convertInterResult()" name="api_planning_hub::ApiPlanningHub.convertInterResult" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_463841e0 [label="106: loop_validate()" name="api_planning_hub::ApiPlanningHub.loop_validate" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_b62629cf [label="176: single_api_planning()" name="api_planning_hub::ApiPlanningHub.single_api_planning" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_414b90c3 [label="121: supplement_Parameters()" name="api_planning_hub::ApiPlanningHub.supplement_Parameters" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_61a3d10a [label="0: (global)()" name="api_selection_hub::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_2d181e9e [label="23: __init__()" name="api_selection_hub::ApiSelectionHub.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_153a4599 [label="51: get_model_by_query()" name="api_selection_hub::ApiSelectionHub.get_model_by_query" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_6978b7ea [label="0: (global)()" name="app::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_d6d0b27c [label="147: delete_tool_db()" name="app::delete_tool_db" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_f3d775f9 [label="470: delete_tool_db_by_ids()" name="app::delete_tool_db_by_ids" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_27a5bd6e [label="556: get_all_tools()" name="app::get_all_tools" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_8007c83d [label="692: get_task_status()" name="app::get_task_status" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_025a5eba [label="167: insert_tool()" name="app::insert_tool" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_b4a44a51 [label="628: long_running_task()" name="app::long_running_task" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_1a78499e [label="576: mesh_query()" name="app::mesh_query" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_fa2a40ca [label="84: test_milvus()" name="app::test_milvus" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_70297ea9 [label="519: upload_file()" name="app::upload_file" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_72ac1202 [label="0: (global)()" name="generate_task_hub::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_6f10a7a0 [label="26: __init__()" name="generate_task_hub::GenerateTaskHub.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_d8dc953e [label="111: gen_context_request()" name="generate_task_hub::GenerateTaskHub.gen_context_request" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_96822e51 [label="118: gen_judge()" name="generate_task_hub::GenerateTaskHub.gen_judge" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_7f55d256 [label="80: gen_param_task()" name="generate_task_hub::GenerateTaskHub.gen_param_task" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ce4750c9 [label="57: gen_root_task()" name="generate_task_hub::GenerateTaskHub.gen_root_task" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_27674284 [label="104: gen_task_from_context()" name="generate_task_hub::GenerateTaskHub.gen_task_from_context" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_5113c158 [label="0: (global)()" name="param_extraction_hub::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_da7c6939 [label="27: __init__()" name="param_extraction_hub::ParamExtractionHub.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_022ffb7a [label="104: extraction_params()" name="param_extraction_hub::ParamExtractionHub.extraction_params" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_334842b7 [label="60: validate_params()" name="param_extraction_hub::ParamExtractionHub.validate_params" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ada1b17a [label="42: __init__()" name="promptModel::PromptModelHub.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_4b3111f0 [label="552: post_process_get_all_parameter_result()" name="promptModel::PromptModelHub.post_process_get_all_parameter_result" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_b8a6cc06 [label="8: find_outer_braces()" name="promptModel::find_outer_braces" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_0aa1529b [label="22: remove_unquoted_backslash()" name="promptModel::remove_unquoted_backslash" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_df80329e [label="42: __init__()" name="qwenPromptModel::QwenModelPromptHub.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_29c9b688 [label="585: post_process_get_all_parameter_result()" name="qwenPromptModel::QwenModelPromptHub.post_process_get_all_parameter_result" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_aecd6e20 [label="8: find_outer_braces()" name="qwenPromptModel::find_outer_braces" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ddcab159 [label="22: remove_unquoted_backslash()" name="qwenPromptModel::remove_unquoted_backslash" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_04b78f9e [label="0: (global)()" name="task_manager::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_a990c9ce [label="17: __init__()" name="task_manager::TaskManager.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_1412bed7 [label="21: create_task()" name="task_manager::TaskManager.create_task" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_8832cbd4 [label="55: get_task_by_id()" name="task_manager::TaskManager.get_task_by_id" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_32ac3dff [label="37: update_task()" name="task_manager::TaskManager.update_task" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_9af973d4 [label="0: (global)()" name="tool_manager::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_ff6ed187 [label="16: __init__()" name="tool_manager::ToolManager.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_17614264 [label="111: clear_cache()" name="tool_manager::ToolManager.clear_cache" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_3e52d16c [label="34: delete_all_tools()" name="tool_manager::ToolManager.delete_all_tools" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_deb5a8bd [label="68: delete_tools()" name="tool_manager::ToolManager.delete_tools" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_1f36687e [label="40: get_all_tools()" name="tool_manager::ToolManager.get_all_tools" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_c37ea6a0 [label="154: get_tools_by_ids()" name="tool_manager::ToolManager.get_tools_by_ids" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_0fa09ec3 [label="130: get_tools_by_ids_from_mongo()" name="tool_manager::ToolManager.get_tools_by_ids_from_mongo" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_ed6edced [label="184: get_tools_by_operationIds()" name="tool_manager::ToolManager.get_tools_by_operationIds" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_66e927cb [label="87: insert_tools()" name="tool_manager::ToolManager.insert_tools" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_53ea7aaa [label="75: max_id()" name="tool_manager::ToolManager.max_id" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_408d8f1c [label="326: test_milvus()" name="tool_manager::ToolManager.test_milvus" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_745ee926 [label="208: upload_file()" name="tool_manager::ToolManager.upload_file" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_1f4ff539 [label="24: __init__()" name="tool_summary_hub::ToolSummaryHub.__init__" shape="rect" style="rounded,filled" fillcolor="#cccccc" ];
+node_eb83afe0 [label="55: tool_summary()" name="tool_summary_hub::ToolSummaryHub.tool_summary" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_526320ab [label="0: (global)()" name="tool_use_hub::(global)" shape="rect" style="rounded,filled" fillcolor="#966F33" ];
+node_97c29ad7 [label="10: __init__()" name="tool_use_hub::ToolUseHub.__init__" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_7aafc763 [label="27: tool_use()" name="tool_use_hub::ToolUseHub.tool_use" shape="rect" style="rounded,filled" fillcolor="#6db33f" ];
+node_606dd859 -> node_bfff3ae5 [color="#E69F00" penwidth="2"];
+node_606dd859 -> node_70afae84 [color="#E69F00" penwidth="2"];
+node_bfff3ae5 -> node_2d181e9e [color="#0072B2" penwidth="2"];
+node_bfff3ae5 -> node_6f10a7a0 [color="#0072B2" penwidth="2"];
+node_bfff3ae5 -> node_da7c6939 [color="#0072B2" penwidth="2"];
+node_bfff3ae5 -> node_a990c9ce [color="#0072B2" penwidth="2"];
+node_bfff3ae5 -> node_1f4ff539 [color="#0072B2" penwidth="2"];
+node_bfff3ae5 -> node_97c29ad7 [color="#0072B2" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_6d63305b [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_463841e0 [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_463841e0 [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_b62629cf [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_b62629cf [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_b62629cf [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_ce4750c9 [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_27674284 [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_eb83afe0 [color="#F0E442" penwidth="2"];
+node_70afae84 -> node_eb83afe0 [color="#F0E442" penwidth="2"];
+node_6d63305b -> node_32ac3dff [color="#009E73" penwidth="2"];
+node_6d63305b -> node_32ac3dff [color="#009E73" penwidth="2"];
+node_6d63305b -> node_32ac3dff [color="#009E73" penwidth="2"];
+node_b62629cf -> node_414b90c3 [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_153a4599 [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_96822e51 [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_96822e51 [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_7f55d256 [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_022ffb7a [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_7aafc763 [color="#CC79A7" penwidth="2"];
+node_b62629cf -> node_7aafc763 [color="#CC79A7" penwidth="2"];
+node_414b90c3 -> node_153a4599 [color="#009E73" penwidth="2"];
+node_414b90c3 -> node_022ffb7a [color="#009E73" penwidth="2"];
+node_414b90c3 -> node_7aafc763 [color="#009E73" penwidth="2"];
+node_61a3d10a -> node_2d181e9e [color="#56B4E9" penwidth="2"];
+node_61a3d10a -> node_153a4599 [color="#56B4E9" penwidth="2"];
+node_2d181e9e -> node_ada1b17a [color="#D55E00" penwidth="2"];
+node_2d181e9e -> node_df80329e [color="#D55E00" penwidth="2"];
+node_2d181e9e -> node_ff6ed187 [color="#D55E00" penwidth="2"];
+node_153a4599 -> node_c37ea6a0 [color="#E69F00" penwidth="2"];
+node_153a4599 -> node_c37ea6a0 [color="#E69F00" penwidth="2"];
+node_6978b7ea -> node_a990c9ce [color="#56B4E9" penwidth="2"];
+node_6978b7ea -> node_ff6ed187 [color="#56B4E9" penwidth="2"];
+node_d6d0b27c -> node_3e52d16c [color="#F0E442" penwidth="2"];
+node_f3d775f9 -> node_deb5a8bd [color="#E69F00" penwidth="2"];
+node_27a5bd6e -> node_1f36687e [color="#D55E00" penwidth="2"];
+node_8007c83d -> node_8832cbd4 [color="#0072B2" penwidth="2"];
+node_025a5eba -> node_66e927cb [color="#56B4E9" penwidth="2"];
+node_b4a44a51 -> node_bfff3ae5 [color="#E69F00" penwidth="2"];
+node_b4a44a51 -> node_70afae84 [color="#E69F00" penwidth="2"];
+node_b4a44a51 -> node_6f10a7a0 [color="#E69F00" penwidth="2"];
+node_b4a44a51 -> node_d8dc953e [color="#E69F00" penwidth="2"];
+node_b4a44a51 -> node_32ac3dff [color="#E69F00" penwidth="2"];
+node_b4a44a51 -> node_32ac3dff [color="#E69F00" penwidth="2"];
+node_b4a44a51 -> node_32ac3dff [color="#E69F00" penwidth="2"];
+node_1a78499e -> node_1412bed7 [color="#D55E00" penwidth="2"];
+node_fa2a40ca -> node_408d8f1c [color="#56B4E9" penwidth="2"];
+node_70297ea9 -> node_745ee926 [color="#E69F00" penwidth="2"];
+node_72ac1202 -> node_6f10a7a0 [color="#56B4E9" penwidth="2"];
+node_72ac1202 -> node_96822e51 [color="#56B4E9" penwidth="2"];
+node_72ac1202 -> node_96822e51 [color="#56B4E9" penwidth="2"];
+node_72ac1202 -> node_96822e51 [color="#56B4E9" penwidth="2"];
+node_72ac1202 -> node_96822e51 [color="#56B4E9" penwidth="2"];
+node_72ac1202 -> node_ff6ed187 [color="#56B4E9" penwidth="2"];
+node_72ac1202 -> node_c37ea6a0 [color="#56B4E9" penwidth="2"];
+node_6f10a7a0 -> node_ada1b17a [color="#000000" penwidth="2"];
+node_6f10a7a0 -> node_df80329e [color="#000000" penwidth="2"];
+node_d8dc953e -> node_d8dc953e [color="#D55E00" penwidth="2"];
+node_5113c158 -> node_da7c6939 [color="#000000" penwidth="2"];
+node_5113c158 -> node_022ffb7a [color="#000000" penwidth="2"];
+node_5113c158 -> node_ff6ed187 [color="#000000" penwidth="2"];
+node_5113c158 -> node_c37ea6a0 [color="#000000" penwidth="2"];
+node_da7c6939 -> node_ada1b17a [color="#E69F00" penwidth="2"];
+node_da7c6939 -> node_df80329e [color="#E69F00" penwidth="2"];
+node_022ffb7a -> node_334842b7 [color="#56B4E9" penwidth="2"];
+node_4b3111f0 -> node_b8a6cc06 [color="#000000" penwidth="2"];
+node_4b3111f0 -> node_0aa1529b [color="#000000" penwidth="2"];
+node_29c9b688 -> node_aecd6e20 [color="#000000" penwidth="2"];
+node_29c9b688 -> node_ddcab159 [color="#000000" penwidth="2"];
+node_04b78f9e -> node_a990c9ce [color="#D55E00" penwidth="2"];
+node_04b78f9e -> node_1412bed7 [color="#D55E00" penwidth="2"];
+node_9af973d4 -> node_ff6ed187 [color="#F0E442" penwidth="2"];
+node_9af973d4 -> node_3e52d16c [color="#F0E442" penwidth="2"];
+node_9af973d4 -> node_c37ea6a0 [color="#F0E442" penwidth="2"];
+node_9af973d4 -> node_ed6edced [color="#F0E442" penwidth="2"];
+node_9af973d4 -> node_745ee926 [color="#F0E442" penwidth="2"];
+node_3e52d16c -> node_17614264 [color="#F0E442" penwidth="2"];
+node_deb5a8bd -> node_17614264 [color="#0072B2" penwidth="2"];
+node_deb5a8bd -> node_deb5a8bd [color="#0072B2" penwidth="2"];
+node_deb5a8bd -> node_c37ea6a0 [color="#0072B2" penwidth="2"];
+node_c37ea6a0 -> node_0fa09ec3 [color="#000000" penwidth="2"];
+node_66e927cb -> node_66e927cb [color="#009E73" penwidth="2"];
+node_66e927cb -> node_53ea7aaa [color="#009E73" penwidth="2"];
+node_745ee926 -> node_66e927cb [color="#D55E00" penwidth="2"];
+node_1f4ff539 -> node_ada1b17a [color="#E69F00" penwidth="2"];
+node_1f4ff539 -> node_df80329e [color="#E69F00" penwidth="2"];
+node_526320ab -> node_ff6ed187 [color="#009E73" penwidth="2"];
+node_526320ab -> node_c37ea6a0 [color="#009E73" penwidth="2"];
+node_526320ab -> node_97c29ad7 [color="#009E73" penwidth="2"];
+node_526320ab -> node_7aafc763 [color="#009E73" penwidth="2"];
+subgraph cluster_6058ec26 {
+    node_606dd859;
+    label="File: api_planning_hub";
+    name="api_planning_hub";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_de925270 {
+        node_bfff3ae5 node_6d63305b node_463841e0 node_414b90c3 node_b62629cf node_70afae84;
+        label="Class: ApiPlanningHub";
+        name="ApiPlanningHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_e04917ea {
+    node_61a3d10a;
+    label="File: api_selection_hub";
+    name="api_selection_hub";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_83ce9146 {
+        node_2d181e9e node_153a4599;
+        label="Class: ApiSelectionHub";
+        name="ApiSelectionHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_c57d682b {
+    node_fa2a40ca node_d6d0b27c node_025a5eba node_f3d775f9 node_70297ea9 node_27a5bd6e node_1a78499e node_b4a44a51 node_8007c83d node_6978b7ea;
+    label="File: app";
+    name="app";
+    style="filled";
+    graph[style=dotted];
+};
+subgraph cluster_4573187c {
+    node_72ac1202;
+    label="File: generate_task_hub";
+    name="generate_task_hub";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_682e677e {
+        node_6f10a7a0 node_ce4750c9 node_7f55d256 node_27674284 node_d8dc953e node_96822e51;
+        label="Class: GenerateTaskHub";
+        name="GenerateTaskHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_250ffea0 {
+    node_5113c158;
+    label="File: param_extraction_hub";
+    name="param_extraction_hub";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_c85f28c7 {
+        node_da7c6939 node_334842b7 node_022ffb7a;
+        label="Class: ParamExtractionHub";
+        name="ParamExtractionHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_f7401fc8 {
+    node_b8a6cc06 node_0aa1529b;
+    label="File: promptModel";
+    name="promptModel";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_bf81f9a1 {
+        node_ada1b17a node_4b3111f0;
+        label="Class: PromptModelHub";
+        name="PromptModelHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_49d5f427 {
+    node_aecd6e20 node_ddcab159;
+    label="File: qwenPromptModel";
+    name="qwenPromptModel";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_f42ddbf2 {
+        node_df80329e node_29c9b688;
+        label="Class: QwenModelPromptHub";
+        name="QwenModelPromptHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_d4146b02 {
+    node_04b78f9e;
+    label="File: task_manager";
+    name="task_manager";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_e77117c7 {
+        node_a990c9ce node_1412bed7 node_32ac3dff node_8832cbd4;
+        label="Class: TaskManager";
+        name="TaskManager";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_1edf9949 {
+    node_9af973d4;
+    label="File: tool_manager";
+    name="tool_manager";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_ecbeac74 {
+        node_ff6ed187 node_3e52d16c node_1f36687e node_deb5a8bd node_53ea7aaa node_66e927cb node_17614264 node_0fa09ec3 node_c37ea6a0 node_ed6edced node_745ee926 node_408d8f1c;
+        label="Class: ToolManager";
+        name="ToolManager";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_952838bc {
+    label="File: tool_summary_hub";
+    name="tool_summary_hub";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_162dc337 {
+        node_1f4ff539 node_eb83afe0;
+        label="Class: ToolSummaryHub";
+        name="ToolSummaryHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+subgraph cluster_5bc47412 {
+    node_526320ab;
+    label="File: tool_use_hub";
+    name="tool_use_hub";
+    style="filled";
+    graph[style=dotted];
+    subgraph cluster_2040f035 {
+        node_97c29ad7 node_7aafc763;
+        label="Class: ToolUseHub";
+        name="ToolUseHub";
+        style="filled";
+        graph[style=dotted];
+    };
+};
+}

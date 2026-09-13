@@ -1,0 +1,19 @@
+[run]
+omit =
+    test/*
+    app.py
+    customize_milvus_wrapper/text_milvus.py
+    models/embedding_model.py
+    models/reranker_model.py
+    models/qwen_reranker_model.py
+    models/remote_embedding_model.py
+    demo/*
+    */__main__*
+
+[report]
+exclude_also =
+    def __repr__
+    def __str__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if __name__ == '__main__':

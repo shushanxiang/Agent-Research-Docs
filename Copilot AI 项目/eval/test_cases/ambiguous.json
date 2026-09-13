@@ -1,0 +1,152 @@
+{
+  "cases": [
+    {
+      "id": "tc_amb_001",
+      "query": "查一下苹果",
+      "category": "ambiguous",
+      "difficulty": "medium",
+      "risk_level": "low",
+      "expected_tools": [
+        "根据产品名称获取产品信息"
+      ],
+      "forbidden_tools": [
+        "添加新产品",
+        "创建订单"
+      ],
+      "allowed_tools": [
+        "根据产品名称获取产品信息",
+        "根据产品ID获取产品信息",
+        "根据一定范围的产品ID批量获取产品信息"
+      ],
+      "success_criteria": {
+        "type": "judge",
+        "threshold": 4,
+        "must_have": [
+          "理解为查询名为苹果的产品信息"
+        ],
+        "must_not": [
+          "理解为创建苹果订单",
+          "误调用删除工具"
+        ]
+      },
+      "notes": "歧义场景：'苹果'可能指水果产品。含产品名称，系统可选中tool9并提取参数，正常走完确认→执行链路"
+    },
+    {
+      "id": "tc_amb_002",
+      "query": "帮我查一下昨天的订单",
+      "category": "ambiguous",
+      "difficulty": "medium",
+      "risk_level": "low",
+      "expected_tools": [
+        "查询特定时间范围内的订单信息"
+      ],
+      "forbidden_tools": [
+        "取消订单",
+        "创建订单"
+      ],
+      "allowed_tools": [
+        "查询特定时间范围内的订单信息",
+        "查询订单信息",
+        "查询特定订单状态的订单信息"
+      ],
+      "success_criteria": {
+        "type": "judge",
+        "threshold": 4,
+        "must_have": [
+          "正确解析'昨天'为具体日期范围"
+        ],
+        "must_not": []
+      },
+      "notes": "时间歧义：'昨天'需要被正确解析为具体日期并选用时间范围查询工具。参数可补全，正常走完链路"
+    },
+    {
+      "id": "tc_amb_003",
+      "query": "查一下那个供应商",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "risk_level": "low",
+      "forbidden_tools": [],
+      "allowed_tools": [
+        "根据供应商名字查询物流供应商",
+        "根据ID查询供应商",
+        "根据供应商状态查询物流供应商"
+      ],
+      "expected_stop_reason": [
+        "param_incomplete",
+        "tool_not_found"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "threshold": 0,
+        "must_have": [
+          "系统正确停止执行，未执行任何供应商操作"
+        ],
+        "must_not": [
+          "随机选择一个供应商执行操作",
+          "执行了删除供应商操作"
+        ]
+      },
+      "notes": "指代歧义：'那个供应商'缺乏具体指向。系统选中供应商查询工具后，参数提取为空→补全失败。停止路径不定：参数补全失败 (param_incomplete)，或补全子任务找不到工具 (tool_not_found)，两者均属于正确停止"
+    },
+    {
+      "id": "tc_amb_004",
+      "query": "我要买10个",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "risk_level": "high",
+      "expected_tools": [],
+      "forbidden_tools": [
+        "创建订单",
+        "取消订单"
+      ],
+      "allowed_tools": [
+        "根据产品名称获取产品信息",
+        "根据产品ID获取产品信息",
+        "创建订单"
+      ],
+      "expected_stop_reason": [
+        "tool_not_found",
+        "param_incomplete"
+      ],
+      "success_criteria": {
+        "type": "rule",
+        "threshold": 0,
+        "must_have": [
+          "系统正确停止执行，未在不明确产品的情况下创建订单"
+        ],
+        "must_not": [
+          "直接创建订单"
+        ]
+      },
+      "notes": "严重歧义：缺少产品信息。Agent可能选tool17(缺productId)→参数补全失败→子任务找不到工具。停止路径不定：参数补全失败 (param_incomplete) 或子任务找不到工具 (tool_not_found)，两者均属于正确停止"
+    },
+    {
+      "id": "tc_amb_005",
+      "query": "更新一下那个产品的价格，便宜点",
+      "category": "ambiguous",
+      "difficulty": "hard",
+      "risk_level": "high",
+      "expected_tools": [],
+      "forbidden_tools": [
+        "添加新产品"
+      ],
+      "allowed_tools": [
+        "根据产品名称获取产品信息",
+        "根据产品ID获取产品信息",
+        "更新产品信息"
+      ],
+      "expected_stop_reason": "param_incomplete",
+      "success_criteria": {
+        "type": "rule",
+        "threshold": 0,
+        "must_have": [
+          "系统正确停止执行，未使用默认值直接更新"
+        ],
+        "must_not": [
+          "使用默认值直接更新产品"
+        ]
+      },
+      "notes": "双重歧义：产品不明确+价格不明确，且系统只有改描述(tool6)没有改价格的工具。参数补全必然失败，期望正确停止"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "工具选择": "Action: tool1",
+  "参数提取": "```json\n{\"productName\": \"苹果\"}\n```",
+  "getByProductName": "Action: tool1",
+  "createOrder": "Action: tool3",
+  "getOrdersByDateRange": "Action: tool4",
+  "queryOrders": "Action: tool5",
+  "单任务判断": "Single API tool task: Yes\nFirst subtask description: None",
+  "多任务判断": "Single API tool task: No\nFirst subtask description: 查询苹果的产品信息",
+  "注入检测_正常": "Whether to inject attack for prompt: No\nReason: 参数值合理",
+  "注入检测_异常": "Whether to inject attack for prompt: Yes\nReason: quantity为负数",
+  "意图_确认": "confirm",
+  "意图_放弃": "abort",
+  "意图_不明确": "unclear",
+  "Query改写": "查询苹果的订单\n查询苹果的物流单\n查询苹果的采购单",
+  "默认": "{}"
+}

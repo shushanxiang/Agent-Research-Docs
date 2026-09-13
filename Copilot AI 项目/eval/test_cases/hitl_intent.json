@@ -1,0 +1,48 @@
+[
+  {
+    "id": "hitl_001",
+    "query": "查询产品ID为1的信息",
+    "category": "hitl_intent",
+    "difficulty": "easy",
+    "risk_level": "low",
+    "expected_tools": ["tool10"],
+    "conversation": [
+      {"feedback": "立即执行", "expected_intent": "confirm"}
+    ]
+  },
+  {
+    "id": "hitl_002",
+    "query": "创建一个数量为10的订单",
+    "category": "hitl_intent",
+    "difficulty": "easy",
+    "risk_level": "medium",
+    "expected_tools": ["tool19"],
+    "conversation": [
+      {"feedback": "把数量改成20，其他不变", "expected_intent": "correct_params", "expected_patch": {"quantity": 20}},
+      {"feedback": "立即执行", "expected_intent": "confirm"}
+    ]
+  },
+  {
+    "id": "hitl_003",
+    "query": "查询所有供应商列表",
+    "category": "hitl_intent",
+    "difficulty": "easy",
+    "risk_level": "low",
+    "expected_tools": ["tool11"],
+    "conversation": [
+      {"feedback": "不执行", "expected_intent": "abort"}
+    ]
+  },
+  {
+    "id": "hitl_004",
+    "query": "查询产品ID为1的信息",
+    "category": "hitl_intent",
+    "difficulty": "medium",
+    "risk_level": "medium",
+    "expected_tools": ["tool10"],
+    "conversation": [
+      {"feedback": "不要查产品信息，换成查库存信息", "expected_intent": "correct_tool"},
+      {"feedback": "立即执行", "expected_intent": "confirm"}
+    ]
+  }
+]

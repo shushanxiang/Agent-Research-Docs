@@ -1,6 +1,6 @@
 skill的收集~~
 
-001：Agent 项目架构分层拆解
+001：Agent 项目架构分层拆解(docs/skill/agent-architecture-decomposer.zip)
 目的：将一个陌生 Agent/LLM 应用代码库，按分层框架拆解为一份可阅读的架构分析文档：每一层怎么实现的、用了什么技术方案、对应哪些文件。产出物供快速理解、接手项目、写技术文档使用。
 工作流：
   Phase 1：全量建图（不读代码）

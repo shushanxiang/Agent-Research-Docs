@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDD / BDD / TDD 与 Vibe Coding 协作开发深度研究报告</title>
+<style>
+:root{
+  --ink:#1c1c1a;
+  --ink-2:#4a4a46;
+  --muted:#77776f;
+  --line:#e4e3dd;
+  --line-2:#d3d1c7;
+  --bg:#ffffff;
+  --surface:#faf9f6;
+  --sdd:#534AB7; --sdd-bg:#EEEDFE; --sdd-bd:#CECBF6;
+  --bdd:#0F6E56; --bdd-bg:#E1F5EE; --bdd-bd:#9FE1CB;
+  --tdd:#993C1D; --tdd-bg:#FAECE7; --tdd-bd:#F5C4B3;
+  --vibe:#854F0B; --vibe-bg:#FAEEDA; --vibe-bd:#FAC775;
+  --red:#A32D2D; --red-bg:#FCEBEB;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--sans); font-size:15.5px; line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:960px;margin:0 auto;padding:56px 32px 96px}
+
+/* ---------- header ---------- */
+.kicker{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+h1{font-size:34px;line-height:1.3;font-weight:600;margin:0 0 16px;letter-spacing:-.01em}
+.sub{font-size:16.5px;color:var(--ink-2);margin:0 0 24px;max-width:44em}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:40px}
+.chip{font-size:12.5px;color:var(--ink-2);background:var(--surface);border:0.5px solid var(--line);border-radius:999px;padding:3px 11px}
+
+h2{font-size:24px;font-weight:600;margin:64px 0 8px;padding-top:28px;border-top:2px solid var(--ink);letter-spacing:-.005em}
+h2 .num{color:var(--muted);font-weight:500;margin-right:10px;font-variant-numeric:tabular-nums}
+h3{font-size:17.5px;font-weight:600;margin:36px 0 10px}
+h4{font-size:15px;font-weight:600;margin:24px 0 8px}
+p{margin:0 0 14px}
+.lead{font-size:16.5px;color:var(--ink-2);margin-bottom:24px}
+a{color:var(--sdd);text-decoration:none;border-bottom:1px solid var(--sdd-bd)}
+a:hover{border-bottom-color:var(--sdd)}
+ul,ol{margin:0 0 16px;padding-left:22px}
+li{margin:0 0 7px}
+li>ul,li>ol{margin-top:7px}
+strong{font-weight:600}
+code{font-family:var(--mono);font-size:13px;background:var(--surface);border:0.5px solid var(--line);border-radius:4px;padding:1px 5px}
+
+/* ---------- toc ---------- */
+.toc{background:var(--surface);border:0.5px solid var(--line);border-radius:12px;padding:20px 24px;margin:36px 0 0}
+.toc h4{margin:0 0 10px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.toc ol{margin:0;padding-left:0;list-style:none;columns:2;column-gap:32px}
+.toc li{margin:0 0 5px;font-size:14px;break-inside:avoid}
+.toc a{color:var(--ink-2);border:none}
+.toc a:hover{color:var(--sdd)}
+
+/* ---------- callouts ---------- */
+.note{border-left:3px solid var(--sdd);background:var(--sdd-bg);border-radius:0 10px 10px 0;padding:16px 20px;margin:20px 0;font-size:14.5px}
+.note.warn{border-left-color:var(--red);background:var(--red-bg)}
+.note.quiet{border-left-color:var(--line-2);background:var(--surface)}
+.note p:last-child{margin-bottom:0}
+.note .tag{display:block;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:20px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;vertical-align:top;padding:9px 12px;border-bottom:0.5px solid var(--line)}
+th{background:var(--surface);font-weight:600;font-size:12.5px;color:var(--ink-2);border-bottom:1px solid var(--line-2);white-space:nowrap}
+tbody tr:hover{background:#fcfcfa}
+td code{font-size:12.5px}
+
+/* ---------- code ---------- */
+pre{background:#f8f8f5;border:0.5px solid var(--line);border-radius:10px;padding:16px 18px;overflow-x:auto;margin:16px 0;font-size:12.8px;line-height:1.65}
+pre code{background:none;border:none;padding:0;font-size:inherit}
+.cap{font-size:12.5px;color:var(--muted);margin:-8px 0 20px}
+.bad{color:var(--red)}
+.good{color:var(--bdd)}
+
+/* ---------- pattern cards ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0}
+.pcard{border:0.5px solid var(--line);border-radius:12px;padding:18px 20px}
+.pcard .ph{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+.pcard .nm{font-size:16px;font-weight:600}
+.pcard .yr{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pcard .one{font-size:13.5px;color:var(--ink-2);margin:0 0 10px}
+.pcard ul{margin:0;padding-left:18px;font-size:13.5px}
+.pcard.s{border-top:3px solid var(--sdd)} .pcard.s .nm{color:var(--sdd)}
+.pcard.b{border-top:3px solid var(--bdd)} .pcard.b .nm{color:var(--bdd)}
+.pcard.t{border-top:3px solid var(--tdd)} .pcard.t .nm{color:var(--tdd)}
+.pcard.v{border-top:3px solid var(--vibe)} .pcard.v .nm{color:var(--vibe)}
+
+/* ---------- steps ---------- */
+.steps{counter-reset:st;margin:24px 0}
+.step{position:relative;padding:0 0 20px 44px;border-left:1.5px solid var(--line);margin-left:15px}
+.step:last-child{border-left-color:transparent;padding-bottom:0}
+.step::before{counter-increment:st;content:counter(st);position:absolute;left:-15px;top:0;width:29px;height:29px;border-radius:50%;background:var(--bg);border:1.5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+.step h4{margin:2px 0 4px;font-size:15.5px}
+.step .io{font-size:13.5px;color:var(--ink-2);margin:0}
+.step .io b{color:var(--ink);font-weight:600}
+.step .gate{display:inline-block;font-size:11.5px;background:var(--bdd-bg);color:var(--bdd);border:0.5px solid var(--bdd-bd);border-radius:999px;padding:1px 9px;margin-left:8px;vertical-align:1px}
+
+/* ---------- flow ---------- */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:24px 0}
+.fnode{flex:1 1 130px;min-width:130px;border:0.5px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--bg)}
+.fnode .t{font-size:13.5px;font-weight:600;display:block;margin-bottom:3px}
+.fnode .d{font-size:12px;color:var(--muted);line-height:1.5;display:block}
+.fnode.s{border-color:var(--sdd-bd);background:var(--sdd-bg)}
+.fnode.b{border-color:var(--bdd-bd);background:var(--bdd-bg)}
+.fnode.t{border-color:var(--tdd-bd);background:var(--tdd-bg)}
+.fnode.v{border-color:var(--vibe-bd);background:var(--vibe-bg)}
+
+/* ---------- metrics ---------- */
+.mgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}
+.m{background:var(--surface);border-radius:10px;padding:14px 16px}
+.m .l{font-size:12px;color:var(--muted);display:block;margin-bottom:3px;line-height:1.4}
+.m .n{font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.15}
+.m .n small{font-size:13px;font-weight:500;color:var(--ink-2)}
+
+/* ---------- ladder ---------- */
+.ladder{margin:26px 0;border:0.5px solid var(--line);border-radius:12px;overflow:hidden}
+.rung{display:grid;grid-template-columns:96px 1fr 1.35fr;gap:0;border-bottom:0.5px solid var(--line)}
+.rung:last-child{border-bottom:none}
+.rung>div{padding:14px 18px}
+.rung .lv{font-size:12px;color:var(--muted);background:var(--surface);font-variant-numeric:tabular-nums;display:flex;align-items:center}
+.rung .nm{font-size:15px;font-weight:600;display:flex;align-items:center}
+.rung .ds{font-size:13.5px;color:var(--ink-2);border-left:0.5px solid var(--line);display:flex;align-items:center}
+.rung.o .nm{color:#3B6D11} .rung.s .nm{color:var(--sdd)}
+.rung.b .nm{color:var(--bdd)} .rung.t .nm{color:var(--tdd)}
+
+/* ---------- footer ---------- */
+footer{margin-top:72px;padding-top:24px;border-top:0.5px solid var(--line);font-size:13px;color:var(--muted)}
+footer ol{font-size:12.5px;line-height:1.6}
+footer li{margin-bottom:4px}
+
+@media(max-width:760px){
+  .wrap{padding:36px 20px 64px}
+  h1{font-size:26px}
+  .pgrid,.mgrid{grid-template-columns:1fr}
+  .toc ol{columns:1}
+  .rung{grid-template-columns:1fr}
+  .rung .ds{border-left:none;padding-top:0}
+  .rung .lv{align-items:flex-start;padding-bottom:0}
+}
+@media print{
+  body{font-size:11.5pt}
+  h2{page-break-after:avoid}
+  pre,table,.pgrid{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<p class="kicker">深度研究报告 · 软件工程方法论</p>
+<h1>SDD、TDD、BDD 与 Vibe Coding：<br>AI 协作开发的模式、流程与最佳实践</h1>
+<p class="sub">四种方法论经常被摆成一道单选题，但它们其实处在同一条抽象阶梯的不同层级。本报告梳理四者的来源与核心机制、各自的完整流程，给出把它们拼接成一个可运转的协作体系的端到端方案，并附上可直接复制使用的产物模板与失败模式清单。</p>
+<div class="meta">
+  <span class="chip">2026-09</span>
+  <span class="chip">四模式对比 + 协作体系</span>
+  <span class="chip">含 12 类失败模式</span>
+  <span class="chip">含 90 天落地路线图</span>
+</div>
+
+<div class="toc">
+<h4>目录</h4>
+<ol>
+  <li><a href="#s0">0 · 一页速览</a></li>
+  <li><a href="#s1">1 · 四个模式：来源与核心机制</a></li>
+  <li><a href="#s2">2 · 具体流程：产物、门禁与角色</a></li>
+  <li><a href="#s3">3 · 协作模式：四种模式如何拼接</a></li>
+  <li><a href="#s4">4 · 最佳实践示例（贯穿案例）</a></li>
+  <li><a href="#s5">5 · 失败模式与争议</a></li>
+  <li><a href="#s6">6 · 工具生态与选型</a></li>
+  <li><a href="#s7">7 · 90 天落地路线图</a></li>
+  <li><a href="#s8">8 · 决策速查</a></li>
+</ol>
+</div>
+
+<!-- ============ 0 ============ -->
+<h2 id="s0"><span class="num">0</span>一页速览</h2>
+
+<p class="lead">先给结论：这四者不是四选一，而是一条<b>从探索到契约、再到验证</b>的抽象阶梯。同一个项目里它们同时存在，只是各自负责不同的问题。</p>
+
+<div class="ladder">
+  <div class="rung o"><div class="lv">L4</div><div class="nm">结果驱动</div><div class="ds">业务结果是否达成——产物是"流失率下降 15%"这类指标。这是前沿，尚未定型。</div></div>
+  <div class="rung s"><div class="lv">L3</div><div class="nm">SDD</div><div class="ds">规格是否完整捕获了意图——产物是 spec / constitution / tasks，人和 AI 的共同真相来源。</div></div>
+  <div class="rung b"><div class="lv">L2</div><div class="nm">BDD</div><div class="ds">用户能不能完成这个流程——产物是 Given-When-Then 场景，可执行、可被非技术角色读懂。</div></div>
+  <div class="rung t"><div class="lv">L1</div><div class="nm">TDD</div><div class="ds">这个函数/单元是否返回了正确结果——产物是测试，最快、最确定的一层。</div></div>
+</div>
+<p class="cap">抽象阶梯：每一层都包含下一层。人往上走的距离，就是人提供独特价值的距离。Vibe Coding 不在这条阶梯上——它是用来<b>发现</b>该往哪一级建的探路工具。</p>
+
+<h3>四句话分工</h3>
+<div class="tw">
+<table>
+<tr><th>模式</th><th>回答的问题</th><th>一句话定位</th></tr>
+<tr><td><b>Vibe Coding</b></td><td>这东西到底该长什么样？</td><td>让你"快速做出来"——用可丢弃的代码换取认知</td></tr>
+<tr><td><b>BDD</b></td><td>什么才算"从用户视角做对了"？</td><td>防止你"说错需求"</td></tr>
+<tr><td><b>SDD</b></td><td>系统该做什么、明确不做什么？</td><td>防止 AI"乱实现"，把意图变成可评审的契约</td></tr>
+<tr><td><b>TDD</b></td><td>每个单元的实现是否正确？</td><td>防止 AI"实现错"，把测试变成 agent 的退出条件</td></tr>
+</table>
+</div>
+
+<h3>五条关键洞察</h3>
+<ol>
+  <li><b>当代码生成趋近零成本，规格成为最贵的资产。</b>GitHub 的说法很直白："维护软件意味着演进规范；开发的通用语言上升到更高层次，代码只是最后一英里的方法。"</li>
+  <li><b>测试的角色变了。</b>传统开发里测试是"保障代码质量的工具"；在 AI 编码里，测试是"约束 AI 行为的执行器"。它还顺带解决一个具体问题——AI 幻觉出一个不存在的库或方法时，测试会立刻编译失败，而不是三天后才发现。</li>
+  <li><b>BDD 因为 AI 而复兴。</b>它曾被认为是为了仪式而仪式（SpecFlow 被 Tricentis 放弃、Cucumber 移交社区、多数团队跳过 Discovery 直接写 Gherkin）。但 agent 没有"人会意"的能力：人能从模糊的 ticket 和 Slack 对话里推断出 PM 的意思，agent 不能。它需要无歧义的指令。<i>"Agents don't need opinions. They need instructions."</i></li>
+  <li><b>SDD 不是新概念。</b>它是 Design by Contract（Meyer, 1988）、TDD（Beck, 2002）、BDD（North, 2006）与模型驱动工程在现代 LLM 上汇合的结果。理解这一点能避免一次典型误判——把它当成又一次方法论炒作。</li>
+  <li><b>没有护栏的 AI 速度是债务加速器，不是产能放大器。</b>Google 2025 DORA 报告的结论是：AI 同时提升交付吞吐和不稳定性，因为它放大的是团队<b>已有的</b>实践。强队更快，没有评审/测试/明确归属的团队只是更快地生产需要重做的工作。</li>
+</ol>
+
+<div class="note">
+<span class="tag">三条判断法则</span>
+<p>① <b>如果这段代码你下周还会碰</b>，就值得用 SDD。<br>
+② 快速原型、一次性脚本、技术可行性探索、个人小工具——<b>放手用 Vibe Coding</b>，它的"快"无可替代。<br>
+③ 生产环境核心业务代码、多人协作（&gt;2 人）、持续迭代超过 3 个月、对稳定性和可追溯性有要求的场景——<b>上 SDD</b>。</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<h2 id="s1"><span class="num">1</span>四个模式：来源与核心机制</h2>
+
+<div class="pgrid">
+  <div class="pcard v">
+    <div class="ph"><span class="nm">Vibe Coding</span><span class="yr">Karpathy, 2025</span></div>
+    <p class="one">放弃阅读代码，靠对话和运行结果迭代。</p>
+    <ul>
+      <li>核心动作：描述意图 → 生成 → 看结果 → 自然语言反馈</li>
+      <li>定义要害：<b>不接受代码审查</b>，"Accept All"，不读 diff</li>
+      <li>作者自划边界：throwaway weekend projects</li>
+      <li>适合：探路、原型、一次性脚本、学习</li>
+    </ul>
+  </div>
+  <div class="pcard t">
+    <div class="ph"><span class="nm">TDD</span><span class="yr">Beck, 2002</span></div>
+    <p class="one">先写失败的测试，再写刚够通过的生产代码。</p>
+    <ul>
+      <li>核心动作：Red → Green → Refactor</li>
+      <li>三条规则：不为通过测试就不写生产代码；只写刚好失败的测试；只写刚好通过的生产代码</li>
+      <li>层级：单元 / 方法级（内环）</li>
+      <li>AI 时代变成：测试即精确提示词 + 退出条件</li>
+    </ul>
+  </div>
+  <div class="pcard b">
+    <div class="ph"><span class="nm">BDD</span><span class="yr">North, 2003/2006</span></div>
+    <p class="one">用业务语言的具体例子描述系统行为，并让它们可执行。</p>
+    <ul>
+      <li>三个实践：Discovery → Formulation → Automation（多数团队只做了第三个）</li>
+      <li>协作机制：Three Amigos / Example Mapping</li>
+      <li>层级：功能 / 场景级（外环）</li>
+      <li>副产品：活文档 + 统一语言</li>
+    </ul>
+  </div>
+  <div class="pcard s">
+    <div class="ph"><span class="nm">SDD</span><span class="yr">Meyer→Spec Kit, 2025</span></div>
+    <p class="one">规格是唯一事实来源，代码是派生产物。</p>
+    <ul>
+      <li>核心动作：Specify → Plan → Tasks → Implement → Verify</li>
+      <li>三层成熟度：Spec-first / Spec-anchored / Spec-as-source</li>
+      <li>层级：战略层，管"做什么 + 不做什么"</li>
+      <li>关键机制：constitution（非可协商原则）作长期护栏</li>
+    </ul>
+  </div>
+</div>
+
+<h3>1.1 Vibe Coding：被误解最深的那个</h3>
+
+<p>2025 年 2 月 6 日，Andrej Karpathy 提出这个词：<i>"There's a new kind of coding I call 'vibe coding', where you fully give in to the vibes, embrace exponentials, and forget that the code even exists."</i> 他描述的具体行为包括——用语音跟 Composer 说话、提"把侧边栏内边距减半"这种懒得自己找的蠢需求、<b>永远 Accept All、不再读 diff</b>、报错就原样粘贴回去。</p>
+
+<p>这个定义比大多数引用者以为的窄得多。Simon Willison 在 2025 年 3 月专门写文章收紧它：<i>"If an LLM wrote every line of your code, but you've reviewed, tested, and understood it all, that's not vibe coding in my book—that's using an LLM as a typing assistant."</i> 他的判别线只有一条：<b>你有没有读你提交的代码。</b>"Vibe coding your way to a production codebase is clearly risky. 我们作为工程师的大部分工作是在演进既有系统，而这些代码的质量和可理解性至关重要。"</p>
+
+<p>词的生命周期说明了它的影响力：Collins 词典 2025 年度词汇；Merriam-Webster 于 2025 年 3 月以"slang &amp; trending"收录。随后两边都获得了专有名称——Willison 在 2025 年 10 月提出 <b>vibe engineering</b>，描述"资深工程师用 LLM 加速、同时保持对产出骄傲且自信地负责"；Karpathy 在 2026 年 4 月提出 <b>agentic engineering</b>，指"针对详细规格指挥编码 agent 的纪律，而不是指望一句 prompt 恰好落在有用处"。</p>
+
+<div class="note warn">
+<span class="tag">代价的数据面</span>
+<p><b>代码结构在退化。</b>GitClear 2026 年 1 月对 6.23 亿次代码变更的研究：重复代码块 <b>+81%</b>，提交内复制粘贴 <b>+41%</b>，而重构（搬移和合并既有代码）<b>-70%</b>——重构从 2022 年占改动行的 21% 掉到 2026 年的 <b>3.8%</b>；掩盖错误而非处理错误的构造 <b>+47%</b>。每一条都是未来的账单：重复逻辑意味着你在一处修了 bug、在另外四处留着；重构缺席意味着代码库每周更难改；掩盖错误意味着故障在客户发现前一直不可见。</p>
+<p><b>信任度极低。</b>Stack Overflow 2025 年近 5 万人的调查：84% 使用或计划使用 AI 工具，但只有 <b>3.1%</b> 高度信任其产出准确性，<b>45.7%</b> 明确不信任。最困扰的问题是"几乎正确、但不完全"（66%），其次是调试 AI 生成代码耗时（45.2%）。"几乎正确"是最贵的一类，因为完全跑不起来反而便宜。</p>
+<p><b>生产力感知是失真的。</b>METR 2025 年 7 月的随机对照试验：16 名资深开源开发者，允许使用 AI 后完成任务反而<b>慢了 19%</b>，而他们事后自评"快了 20%"。</p>
+<p><b>安全没有跟着变好。</b>Veracode 2025 年 10 月：三年间 LLM 生成功能性代码的能力大幅提升，但生成代码的<b>安全性基本没有改善</b>，大模型也不比小模型更擅长生成安全代码。Lovable 2025 年 5 月的案例中，1645 个生成的 Web 应用里有 170 个存在任何人可访问个人信息的问题。</p>
+</div>
+
+<h4>三个月墙</h4>
+<p>纯 Vibe 项目有相当可预测的衰变曲线：<b>兴奋期（1–3 月）</b>高产出，"AI 一天搞定一个功能"；<b>平台期（4–9 月）</b>停滞，"为什么新功能总是破坏旧功能"；<b>衰退期（10–15 月）</b>崩溃，"这坨代码没人能维护，不如重写"。根本原因是零上下文编程：当代码膨胀到几万行，AI 的上下文窗口装不下全貌，开始基于局部信息做决策，而这些决策与其他模块冲突。</p>
+<p class="cap">诊断：Vibe Coding 的失败不是因为 AI 不够强，而是因为<b>意图没有被结构化</b>。</p>
+
+<h3>1.2 TDD：在 AI 时代从"好实践"变成"必需品"</h3>
+
+<p>传统 TDD 的价值叙事是"更好的设计"和"更少的回归"。AI 时代的价值叙事完全不同：它提供了<b>确定性的退出条件</b>。Simon Willison 的表述被反复引用：<i>"Tests give us reliable exit criteria. We are not relying on AI agent's whims, but we force it to iterate until the previously failed tests pass."</i></p>
+
+<p>原因在于 AI 编码引入了一个传统开发里不存在的问题：<b>非确定性</b>。同一个 prompt 可以跑出结构完全不同的实现。你的质量保障不能再依赖"这次生成的代码看起来还行"，必须有外部判据。</p>
+
+<h4>升级后的循环：Test → Drive → Develop</h4>
+<div class="flow">
+  <div class="fnode t"><span class="t">Red</span><span class="d">人（或人审查 AI 草稿）写失败测试，覆盖正常路径 + 边界 + 错误条件</span></div>
+  <div class="fnode t"><span class="t">Green</span><span class="d">AI 生成实现，唯一目标就是让这条测试通过</span></div>
+  <div class="fnode t"><span class="t">Refactor</span><span class="d">AI 清理逻辑，约束是"保持所有测试绿色"</span></div>
+  <div class="fnode"><span class="t">Validate</span><span class="d">人审查产出，决定接受或再来一轮</span></div>
+</div>
+<p class="cap">对应地，四个"为什么测试让 AI 编码更好"的机制：<b>测试即提示词</b>（精确规格降低歧义和幻觉）；<b>建立信心</b>（绿色是证据，不只是"看起来对"）；<b>抑制范围蔓延</b>（紧的测试边界阻止 AI 过度设计）；<b>即时捕获回归</b>（重构变安全）。</p>
+
+<div class="note quiet">
+<span class="tag">一个有说服力的真实案例</span>
+<p>某团队在税务计算模块上遇到：AI 建议用"单价 × 数量"这种简单乘法，看起来完全正确。但测试专门检查了法定舍入要求——必须<b>在小计层级舍入</b>，而不是在行项目层级。于是 AI 的初版代码立刻失败。没有 TDD 的话，这个偏差会直接进生产，带来合规风险和营收对账错误。</p>
+<p>另一个：B2B 合同规则"买 10 件以上、仅对达标行项目打 9 折"。AI 生成的实现是零售场景的常见写法——对<b>整张发票总额</b>统一打折。因为是行项目级的验收测试，这个"看起来完美"的代码同样立刻失败。</p>
+</div>
+
+<h4>AI 时代新增的纪律</h4>
+<ul>
+  <li><b>先提交测试，再提交实现。</b>这既强制了纪律，也让 PR 可评审。</li>
+  <li><b>写测试和写实现用不同 session / 不同 agent。</b>不要让它们共享上下文——共享就意味着 AI 会为自己的实现写自洽的测试。</li>
+  <li><b>测试命名描述行为。</b><code>it('should reject payments over the daily limit')</code>，不是 <code>it('test payment')</code>。</li>
+  <li><b>一个测试一个行为。</b>范围收紧，AI 的发挥空间也就收紧。</li>
+  <li><b>看见红。</b>在任何生产代码改动之前，必须亲眼看到测试是红的。这是防止"测试其实是装饰"的唯一手段。</li>
+</ul>
+
+<h3>1.3 BDD：一条从"形式主义"到"必需品"的回归曲线</h3>
+
+<p>Dan North 在 2003 年提出 BDD，起因不是测试技术问题，而是<b>语言问题</b>：开发者抗拒 TDD，不是因为技术实践难，而是因为"不知道该测什么、测试该叫什么名字、从哪开始"。BDD 把焦点从"测试"移到"描述行为"。2004 年 Chris Matts 提出 Given-When-Then 画布，2006 年 North 发表《Introducing BDD》，2008 年 Aslak Hellesøy 的 Cucumber 让 Given-When-Then 记法普及开来。</p>
+
+<p>BDD 的三个实践里，<b>Discovery 才是价值来源</b>，Gherkin 只是它的记录格式。这一点是 BDD 历史上最大的执行偏差：大多数团队跳过了 Three Amigos 会议，由开发者先写代码、事后补 Gherkin——规格于是变成"已建成之物的文档"，而不是"应当建成之物的规格"。这也是它后来被嫌弃的原因。</p>
+
+<p>AI 把这三件事重新排序了：</p>
+<ul>
+  <li><b>技术门槛消失了。</b>产品经理可以直接用自然语言写场景，AI 自动翻译成可执行测试。Three Amigos 协作终于不必经过技术守门人。</li>
+  <li><b>语义定位取代了脆弱选择器。</b>AI 驱动的测试运行器按上下文而不是 CSS 选择器定位 UI 元素。</li>
+  <li><b>活文档名副其实。</b>场景既是文档又是测试，因此永远不会过期。</li>
+</ul>
+
+<p>更本质的联系来自 Thoughtworks 的 Birgitta Böckeler：<b>spec-by-example 本质上是"few-shot prompt 技术"应用于软件需求。</b>这个类比解释了为什么 BDD 在 AI 时代突然变得高效——你在做的事情，正好是给模型提供带具体输入输出的示例。arXiv 的研究也给了量化支撑：<b>人工精炼的规格可以把 LLM 生成代码的错误减少最多 50%。</b></p>
+
+<h4>为什么 BDD 是必要的：打破自我确认闭环</h4>
+<div class="note warn">
+<span class="tag">Tests Pass ≠ It Works</span>
+<p>这个场景极其常见：AI 生成代码 → 生成测试 → 测试通过 → 你发布 → 用户发现了一个测试本该捕获的 bug。原因是模型误解了某个需求，写了处理错误的代码，又写了确认这个错误行为的测试。<b>测试验证的是 AI 对"你想要什么"的解读，不是你真正想要的东西。</b></p>
+<p>单元测试回答的是"这个函数是否返回预期输出"；它回答不了"这个应用是否做到了用户故事说的那件事"。BDD 的规格打破了闭环，因为真相来源是人工书写的验收标准，而不是 AI 的假设。</p>
+</div>
+
+<h4>BDD 与 ATDD：一个容易被忽略的差异</h4>
+<div class="tw">
+<table>
+<tr><th>维度</th><th>BDD</th><th>ATDD</th></tr>
+<tr><td>语言纯度</td><td>允许少量 UI / 流程描述</td><td>严格纯领域语言，禁止任何实现暗示</td></tr>
+<tr><td>可执行性</td><td>需要额外自动化</td><td>天然可执行</td></tr>
+<tr><td>协作性</td><td>极强（业务 + 开发 + 测试）</td><td>较强（聚焦验收定义）</td></tr>
+<tr><td>对 AI 的约束强度</td><td>中等</td><td>极强（防止实现细节泄露进规格）</td></tr>
+</table>
+</div>
+<p class="cap">ATDD 版本完全禁止出现"注册页面""点击按钮"这类实现暗示，每条语句以句号结尾便于解析，且可直接转化为失败的验收测试。对 agent 而言，越纯的领域语言越难被它"合理地误解"。</p>
+
+<h4>写法：声明式优于命令式</h4>
+<pre><code><span class="bad"># 差（命令式，把测试耦合到会频繁变化的实现细节）</span>
+When I click the "Login" button
+And I type "alice" in the username field
+And I type "secret123" in the password field
+And I click "Submit"
+Then I see the text "Welcome, Alice"
+
+<span class="good"># 好（声明式，描述结果而非交互）</span>
+When Alice logs in with valid credentials
+Then she has access to her dashboard</code></pre>
+<p>规范的其他要求：一个场景一个行为、用领域语言而非术语、覆盖失败路径——因为正常路径是 AI 本来就会做对的部分，<b>边界和错误路径才是它必然遗漏的部分</b>。</p>
+
+<h3>1.4 SDD：不是新发明，是旧谱系的现代实现</h3>
+
+<p>SDD 的概念谱系可以往上追很久：Bertrand Meyer 的 <b>Design by Contract</b>（1988/1992）、模型驱动工程（MDE）、形式化方法。2025 年的变化是：<b>LLM 替换掉了那个曾经让这些方法全部失败的生成器。</b></p>
+
+<p>现代 SDD 的两个爆发点：GitHub 在 2025 年开源的 <b>Spec Kit</b>（MIT，迅速积累到 7–14 万 star 量级，成为"不要工具锁定但要有方法论"的参考实现），以及 AWS 的 <b>Kiro</b>（IDE 原生，把规格工作流内嵌进开发环境）。</p>
+
+<h4>三层成熟度：这是整个领域最有用的一个框架</h4>
+<p>Thoughtworks 杰出工程师 Birgitta Böckeler 在 martinfowler.com 上的分析，区分了三个递进层级，已经成为讨论 SDD 的通用语汇：</p>
+
+<div class="tw">
+<table>
+<tr><th>层级</th><th>做法</th><th>规格生命周期</th><th>代表工具</th><th>门槛</th></tr>
+<tr><td><b>L1 Spec-first</b></td><td>先写规格再实现</td><td>功能完成后规格可丢弃，下个变更写新规格</td><td>Spec Kit、Kiro、BMAD</td><td>低</td></tr>
+<tr><td><b>L2 Spec-anchored</b></td><td>规格长期保留，与代码共同演进</td><td>规格进仓库，与代码一起版本管理；变更先改规格</td><td>OpenSpec（明确以此为目标）</td><td>中</td></tr>
+<tr><td><b>L3 Spec-as-source</b></td><td>人只编辑规格，代码完全生成</td><td>规格是唯一真相来源，代码可随时丢弃重建</td><td>Tessl（实验性）</td><td>高</td></tr>
+</table>
+</div>
+
+<p>Böckeler 对 L3 的判断值得完整保留：它类比二十年前的模型驱动开发（用 UML/DSL 写模型、用定制生成器产代码），当年在业务应用上从未成功——抽象层级别扭、约束太严。现在 LLM 取代了生成器，<b>约束的刚性消失了，但引入了非确定性</b>：同一个规格跑两次，你会得到两个不同的实现。这意味着规格无法像源代码那样充当可靠的真相来源。</p>
+
+<div class="note">
+<span class="tag">实践建议</span>
+<p>大多数团队应该落在 <b>L2</b>。它接受少量双份维护成本，换取贴近棕地现实——你不需要把每个规格字段都做成机器可执行，只需要精确到足以驱动再生成。<b>L1 的问题是六个月后没人知道代码为什么长这样；L3 的问题是团队在一个季度内崩回 L1，因为实现"能跑"之后就没人维护规格了。</b></p>
+</div>
+
+<h4>现代 SDD 工具的标准工作流</h4>
+<p>各家命令名不同，形状是一样的：<b>在让 agent 改动代码库之前先降低歧义。</b></p>
+<div class="flow">
+  <div class="fnode"><span class="t">Explore</span><span class="d">理解问题空间、既有系统、隐性依赖</span></div>
+  <div class="fnode s"><span class="t">Specify</span><span class="d">定义做什么和为什么，不谈技术栈</span></div>
+  <div class="fnode s"><span class="t">Plan</span><span class="d">技术选型、架构、数据模型</span></div>
+  <div class="fnode s"><span class="t">Tasks</span><span class="d">拆成有依赖顺序的原子任务</span></div>
+  <div class="fnode s"><span class="t">Implement</span><span class="d">对照规格与计划执行</span></div>
+  <div class="fnode"><span class="t">Verify</span><span class="d">对照规格与计划验证</span></div>
+</div>
+
+<p>以 GitHub Spec Kit 为例，命令与阶段对应关系如下（它甚至官方支持 <code>--ai codebuddy</code>，会把整套 <code>/speckit.*</code> 命令写进你的 agent 命令目录）：</p>
+<div class="tw">
+<table>
+<tr><th>命令</th><th>作用</th><th>阶段</th></tr>
+<tr><td><code>/speckit.constitution</code></td><td>建立项目治理原则与开发规范</td><td>地基（每项目一次）</td></tr>
+<tr><td><code>/speckit.specify</code></td><td>定义要构建什么（需求 + 用户故事），只讲 what/why</td><td>需求（每个功能一次）</td></tr>
+<tr><td><code>/speckit.clarify</code></td><td>结构化提问，澄清模糊点</td><td>需求校验</td></tr>
+<tr><td><code>/speckit.checklist</code></td><td>生成质量检查清单，被称作"英文的单元测试"</td><td>需求校验</td></tr>
+<tr><td><code>/speckit.plan</code></td><td>选定技术栈、产出技术实现计划</td><td>设计</td></tr>
+<tr><td><code>/speckit.tasks</code></td><td>把计划拆成可执行任务清单（含依赖顺序）</td><td>拆解</td></tr>
+<tr><td><code>/speckit.analyze</code></td><td>跨产物一致性 &amp; 覆盖度分析</td><td>实现前把关</td></tr>
+<tr><td><code>/speckit.implement</code></td><td>按计划执行所有任务</td><td>实现</td></tr>
+</table>
+</div>
+
+<p>AWS Kiro 的产物结构更紧凑：<code>requirements.md</code>（EARS 记法）、<code>design.md</code>（架构、时序图、数据模型、测试策略）、<code>tasks.md</code>（带依赖与实时状态的清单）。它提供两条起点路线：<b>Requirements-First</b>（绿地、产品主导、架构可以适配需求）与 <b>Design-First</b>（已有架构约束、严格非功能要求、需要先验证技术可行性）。</p>
+
+<h4>EARS：让需求可被机器解析的语法</h4>
+<p>EARS（Easy Approach to Requirements Syntax）由 Rolls-Royce 的 Alistair Mavin 等人在分析航空发动机控制系统的适航法规时提出，2009 年发表于 IEEE RE'09，被 Airbus、Bosch、Dyson、Honeywell、Intel、NASA、Siemens 等采用。<b>2025 年起，EARS 被整合进 AI 辅助的规格驱动工具链，最显著的是 Kiro。</b></p>
+<p>它的核心是承认一个事实：需求天然是模糊的，<b>关键缺陷来自非结构化散文</b>——复合句、"适当的""按需的"这类模糊限定词、缺失的触发条件。EARS 用固定子句顺序和极小的关键词表来约束，落在五种模板：</p>
+<div class="tw">
+<table>
+<tr><th>类型</th><th>模板</th><th>示例</th></tr>
+<tr><td>Ubiquitous（普遍）</td><td>THE &lt;系统&gt; SHALL &lt;响应&gt;</td><td>移动电话 SHALL 质量小于 150 克</td></tr>
+<tr><td>Event-driven（事件驱动）</td><td>WHEN &lt;触发&gt; THE &lt;系统&gt; SHALL &lt;响应&gt;</td><td>WHEN 选择静音，笔记本 SHALL 抑制所有音频输出</td></tr>
+<tr><td>State-driven（状态驱动）</td><td>WHILE &lt;状态&gt; THE &lt;系统&gt; SHALL &lt;响应&gt;</td><td>WHILE ATM 中无卡，ATM SHALL 显示"请插卡开始"</td></tr>
+<tr><td>Optional feature（可选特性）</td><td>WHERE &lt;包含该特性&gt; THE &lt;系统&gt; SHALL &lt;响应&gt;</td><td>WHERE 车辆有天窗，车辆 SHALL 在驾驶门有控制面板</td></tr>
+<tr><td>Unwanted behaviour（非期望行为）</td><td>IF &lt;条件&gt; THEN THE &lt;系统&gt; SHALL &lt;响应&gt;</td><td>IF 输入无效信用卡号，THEN 网站 SHALL 显示"请重新输入"</td></tr>
+</table>
+</div>
+<p class="cap">规则：零到多个前置条件、零到<b>一个</b>触发、恰好一个系统名、一到多个系统响应。子句永远按同一时间顺序排列。研究表明，采用 EARS 的团队在设计评审阶段的需求返工通常减少 30%–50%。</p>
+
+<h4>Spec Kit 的宪法文件：把"必须遵守"写进每一轮生成</h4>
+<p><code>constitution.md</code> 只写一次，然后被每个阶段引用。它是"跨所有 agent 交互持续存在的常驻指令"。典型内容是测试方法论要求、架构约定、代码风格、技术栈选择——本质上是给组织建立"有观点的技术栈"。一个具体例子：把从 CWE/MITRE 漏洞目录派生的安全约束编码进版本化的宪法文档，在银行微服务案例中报告安全缺陷相比无约束的 AI 生成<b>减少 73%</b>，同时保持开发速度。</p>
+
+<div class="mgrid">
+  <div class="m"><span class="l">API 变更周期时间（金融服务业案例）</span><div class="n">-75<small>%</small></div></div>
+  <div class="m"><span class="l">合并后缺陷（早期采用者区间）</span><div class="n">-30~50<small>%</small></div></div>
+  <div class="m"><span class="l">首次正确实现的时间</span><div class="n">-20~35<small>%</small></div></div>
+  <div class="m"><span class="l">引入期经历生产力下降的团队</span><div class="n">67<small>%</small></div></div>
+</div>
+<p class="cap">前三个是收益，第四个是成本。ROI 典型周期 3–6 个月。单次功能的现实 TCO（含评审、验证、返工）约 $150–400，工具本身 $0–39/用户/月。</p>
+
+<!-- ============ 2 ============ -->
+<h2 id="s2"><span class="num">2</span>具体流程：产物、门禁与角色</h2>
+
+<h3>2.1 SDD 的六阶段流程</h3>
+<div class="steps">
+  <div class="step">
+    <h4>起草提案（AI 起草，人提想法）</h4>
+    <p class="io">输入：一句想法。产出：<b>proposal.md</b>（为什么改）、<b>specs/</b>（规范增量）、<b>tasks.md</b>（可勾选清单）。</p>
+  </div>
+  <div class="step">
+    <h4>审查对齐（人负责决策）</h4>
+    <p class="io">人与 AI 共同审查，迭代修改直到达成共识，然后<b>锁定规范</b>。<span class="gate">HITL 门禁</span></p>
+    <p class="io" style="margin-top:6px">此时一行代码都没写，但人和 AI 对"要做什么"已经 100% 一致。这是 SDD 最反直觉、也最有价值的一步。</p>
+  </div>
+  <div class="step">
+    <h4>AI 实施（AI 负责执行）</h4>
+    <p class="io">严格按 tasks.md 执行，每完成一项勾选一项。<b>不擅自增加已明确删除的功能。</b></p>
+  </div>
+  <div class="step">
+    <h4>归档更新</h4>
+    <p class="io">把规范增量合并回主 specs/ 目录，提案移入 archive/，更新版本记录。<b>规范成为新的真相来源</b>——也是团队的知识资产，因为它和代码是同步的。</p>
+  </div>
+</div>
+
+<div class="note quiet">
+<span class="tag">三个必须内化的概念</span>
+<p><b>① 规范即真相来源。</b>所有关于"系统应该做什么"的知识都存储在版本可控的规范文件里。代码可以重构，规范是锚点。<br>
+<b>② 变更即提案。</b>任何修改都不是直接在代码上"改一改"，而是创建一个完整的变更提案文件夹（proposal + tasks + specs 增量）。提案通过审查才能进入实施。<br>
+<b>③ AI 即履约方。</b>AI 知道三件事——必须做什么（tasks.md）、不能做什么（规范没写的就不改）、怎样算完成（验收标准）。</p>
+</div>
+
+<h3>2.2 BDD 的三阶段流程</h3>
+<div class="steps">
+  <div class="step">
+    <h4>Discovery：可能做什么</h4>
+    <p class="io">Three Amigos 结构化对话（业务代表 / 开发者 / 测试者），用 <b>Example Mapping</b> 探索具体例子。四色卡片：黄=规则、蓝=例子、红=待澄清问题、绿=验收标准。</p>
+    <p class="io" style="margin-top:6px">三个角色带来的独特视角：业务方知道业务规则与优先级；开发者知道技术含义与可行性；<b>测试者几乎本能地发现障碍和遗漏</b>——他们会在边界情况造成问题之前就把它们识别出来。</p>
+  </div>
+  <div class="step">
+    <h4>Formulation：应该做什么</h4>
+    <p class="io">把例子写成 Gherkin 场景（Given-When-Then），精确到可自动化，并建立三方的统一语言。</p>
+  </div>
+  <div class="step">
+    <h4>Automation：实际做了什么</h4>
+    <p class="io">为每个步骤实现 step definition，把场景接到真实系统上。它们此时应该是红的（行为尚未实现），然后驱动编码。</p>
+    <p class="io" style="margin-top:6px"><b>BDD 的外环 + TDD 的内环</b>：写 BDD 场景（功能级 RED）→ 用 TDD 实现所需组件（多个单元级 RED-GREEN-REFACTOR 循环）→ 再跑 BDD 场景（功能级 GREEN）。</p>
+  </div>
+</div>
+
+<h3>2.3 Vibe Coding 的循环与边界</h3>
+<div class="flow">
+  <div class="fnode v"><span class="t">Prompt</span><span class="d">用自然语言表达想要什么，不写代码</span></div>
+  <div class="fnode v"><span class="t">Generate</span><span class="d">AI 产出脚手架与实现，人可能完全不读</span></div>
+  <div class="fnode v"><span class="t">Iterate</span><span class="d">用对话式追问细化，看运行结果而非读代码</span></div>
+  <div class="fnode"><span class="t">Discard</span><span class="d">关键动作：产出必须可丢弃</span></div>
+</div>
+<p>让它安全的唯一有效方式，是把它严格限制在<b>可丢弃</b>的范围内：短循环、临时分支、UI 试验、"这个库能不能做 X"。当形状稳定下来，把学到的东西<b>提炼成一份短规格</b>（接口、错误情形、可观测性、部署步骤），然后切换模式。</p>
+
+<h3>2.4 各模式的角色分工</h3>
+<div class="tw">
+<table>
+<tr><th>角色</th><th>在协作体系里负责什么</th><th>绝对不能下放给 AI 的</th></tr>
+<tr><td>业务 / 产品</td><td>场景与非目标的确认与签字；优先级</td><td>场景和非目标的最终确认（不必亲自写 OpenAPI）</td></tr>
+<tr><td>技术负责人</td><td>不变式、模块边界、公开接口约束、宪法内容</td><td>架构决策的理由与边界划定</td></tr>
+<tr><td>开发者</td><td>写失败的测试；拥有 spec 变更权；保证 spec 与代码收敛</td><td>契约的所有权——<b>agent 可以起草契约，但永远不是契约的作者</b></td></tr>
+<tr><td>测试 / QA</td><td>边界、错误路径、验收标准完整性；视觉回归</td><td>验收标准的完整性与"什么算通过"的定义</td></tr>
+<tr><td>Agent</td><td>起草提案、生成实现、生成 step definitions、跑测试迭代、变异测试</td><td>修改 spec、定义"done"、跳过一个已锁定的门禁</td></tr>
+</table>
+</div>
+
+<div class="note warn">
+<span class="tag">多智能体编排的唯一前提</span>
+<p>planner 和 implementer 必须共享<b>同一份已签字的文件</b>，而不是对同一张 ticket 的两份转述。否则你得到的是三个 agent 对一个模糊句子的三种理解。同样地，<b>一旦某个 agent 重写了 spec.md，契约就失效了。</b>规格变更必须由人或指定的规划 agent 持有独占权。</p>
+</div>
+
+<!-- ============ 3 ============ -->
+<h2 id="s3"><span class="num">3</span>协作模式：四种模式如何拼接</h2>
+
+<p class="lead">真正可运转的方案不是选一个，而是让它们各就其位：Vibe 负责发现、BDD 负责对齐、SDD 负责约束、TDD 负责验证。</p>
+
+<h3>3.1 黄金路径</h3>
+<div class="steps">
+  <div class="step">
+    <h4>探索（Vibe Coding）——限时、可丢弃</h4>
+    <p class="io">用最粗糙的方式把问题空间摸清楚：这个 API 形状合理吗？这个 UI 流程说得通吗？<b>产物：认知，不是代码。</b></p>
+    <p class="io" style="margin-top:6px">硬约束：会话必须短，产出在成为生产真相之前丢弃或重写。</p>
+  </div>
+  <div class="step">
+    <h4>规格化（SDD）——把认知固化成契约</h4>
+    <p class="io">写 constitution（3–5 条非可协商原则）→ 六要素 spec（结果、范围、约束、既有决策、任务、验证标准）→ plan → tasks。</p>
+    <p class="io" style="margin-top:6px">硬约束：spec 阶段不谈技术栈，混入实现细节会产出过度约束的规格。<span class="gate">HITL：规格签字</span></p>
+  </div>
+  <div class="step">
+    <h4>行为化（BDD）——把契约转成可执行验收</h4>
+    <p class="io">Three Amigos 提炼具体例子 → 写成声明式 Gherkin / ATDD 纯领域语言 → 这一步之后 spec 才真正"可被 agent 验证"。</p>
+    <p class="io" style="margin-top:6px">硬约束：必须覆盖失败路径。<span class="gate">HITL：场景签字</span></p>
+  </div>
+  <div class="step">
+    <h4>实现（TDD，外环包内环）——agent 执行，人守红</h4>
+    <p class="io">从验收测试得到目标 → 逐个单元写失败测试 → agent 生成实现 → 重构。</p>
+    <p class="io" style="margin-top:6px">硬约束：写测试的 agent 与写实现的 agent 不共享上下文；先提交测试再提交实现。</p>
+  </div>
+  <div class="step">
+    <h4>验证（多层门禁）</h4>
+    <p class="io">验收测试（WHAT）+ 单元测试（HOW）双流必须同时通过；有条件时加<b>变异测试</b>作为第三层验证——它专门捕捉"断言被弱化到流水线能通过"的假绿。</p>
+  </div>
+  <div class="step">
+    <h4>归档（Spec-anchored）</h4>
+    <p class="io">行为变更时，spec 与代码在<b>同一个 commit / PR</b> 里更新。合并 spec delta 回主规格，提案归档。</p>
+    <p class="io" style="margin-top:6px">违反这一条的代价："如果 spec 不在 diff 里，评审者可以合理地假设行为没有变化——而这是错的。"</p>
+  </div>
+</div>
+
+<h3>3.2 三种团队形态</h3>
+<div class="pgrid">
+  <div class="pcard s">
+    <div class="ph"><span class="nm">形态 A：单人 + 智能体</span></div>
+    <p class="one">仪式更短，但不是零。</p>
+    <ul>
+      <li>动手前：20 分钟写一份文件——目标、3 个场景、2 个非目标、一条验证命令</li>
+      <li>文件放在分支上，随代码走</li>
+      <li>补丁之后：逐条走验收标准，标记哪些没检查</li>
+      <li>个人 AGENTS.md 半屏就够，只要包含"不要发明验收标准"这条</li>
+    </ul>
+  </div>
+  <div class="pcard s">
+    <div class="ph"><span class="nm">形态 B：小队（2–8 人）</span></div>
+    <p class="one">spec 进 Git，PR 承载契约评审。</p>
+    <ul>
+      <li>先约定"本次变更的契约是哪个文件"</li>
+      <li>PR 里把 spec 放在代码 diff <b>上方</b>：评审者先接受或拒绝意图，再看实现</li>
+      <li>Definition of Ready 参与门禁</li>
+      <li>这能削减验证债务——跨一千行争论"为什么"已经太晚</li>
+    </ul>
+  </div>
+  <div class="pcard s">
+    <div class="ph"><span class="nm">形态 C：多智能体编排</span></div>
+    <p class="one">协调成本换并发能力，只在稳定后扩展。</p>
+    <ul>
+      <li>任务级规格支持安全的并发：协调 agent 派发多个实现 agent 到独立任务，验证 agent 检查每个产出</li>
+      <li>规格被描述为"超级 prompt"，把工作按上下文窗口切成模块</li>
+      <li>顺序：先稳定单 agent → 再加第二个（验证）agent 度量返工率 → 最后才扩到 swarm</li>
+      <li><b>从 2 个 agent 跳到 4 个，是大多数团队引入协调 bug 的地方</b></li>
+    </ul>
+  </div>
+  <div class="pcard v">
+    <div class="ph"><span class="nm">贯穿：探索态</span></div>
+    <p class="one">对任何形态都保留一条低成本的探路通道。</p>
+    <ul>
+      <li>探索性工作继续 vibe coding——它是发现"问题是什么"的正确工具</li>
+      <li>唯一要求：<b>把手交接口显式化</b></li>
+      <li>当 spike 教会你这件事的形状，停下来，提炼规格，按规格重建生产版本</li>
+    </ul>
+  </div>
+</div>
+
+<h3>3.3 为什么是现在是这个组合</h3>
+<p>三个来自方法论之父与顶级工程组织的判断，指向同一件事：</p>
+<ul>
+  <li><b>Kent Beck</b>（TDD 创造者）：被淘汰的技能是语法和语言专精；被放大的技能是愿景、策略、任务拆解和判断力。他同时明确说 TDD 在 AI 时代是超能力，因为 agent 会不断引入回归，而测试是唯一可靠的护栏。</li>
+  <li><b>Dave Farley</b>：验证是新的瓶颈。"我没法足够仔细地读 12,000 行代码。信任必须来自可执行规格和持续验证。"</li>
+  <li><b>Martin Fowler 团队</b>（2026 年 retreat）：写代码从来不是瓶颈。这意味着 AI 的速度倍增在缺乏工程实践时会变成债务倍增。</li>
+</ul>
+
+<!-- ============ 4 ============ -->
+<h2 id="s4"><span class="num">4</span>最佳实践示例（贯穿案例）</h2>
+
+<p class="lead">贯穿案例：给一个<b>已有</b>的博客系统增加"深色模式"。选它是因为棕地改造最真实——绿地项目可以随便重来，棕地不行。</p>
+
+<h3>4.1 反面对照：Vibe Coding 版本</h3>
+<pre><code>你：帮我加个深色模式
+AI：好的，我改了全局 CSS
+你：不对，图片不要反色
+AI：修复了
+你：设置页的开关呢？
+AI：加上了
+你：白色模式的代码被你覆盖了？？？
+AI：抱歉...
+<span class="bad">结果：3 小时后，深色模式勉强能用，白色模式坏了两个页面。</span></code></pre>
+<p>这段对话里包含了 Vibe Coding 的全部四个结构性问题：<b>需求像流沙</b>（在对话中不断漂移，没人记得最初要什么）、<b>AI 爱自由发挥</b>（你说"优化登录页"，它重写整个认证流程还顺手改了密码找回逻辑——根本原因是 AI 没有边界感，因为没有明确规范约束它）、<b>回归测试靠肉眼</b>（改完 A 坏 B，修好 B C 又出问题，而你没有规范文档，甚至不确定"正确的行为"该是什么）、<b>协作靠吼</b>（没有真相来源，每个人和 AI 的对话都是孤立的）。</p>
+
+<h3>4.2 SDD 版本：同一需求的正确走法</h3>
+
+<h4>步骤 1：起草提案（AI 起草）</h4>
+<pre><code>changes/add-dark-mode/
+├── proposal.md
+│   ├── Why: 提升夜间阅读体验，用户调研显示 43% 的访问发生在夜间
+│   ├── What: 增加深色主题切换功能
+│   └── Impact: 影响全局样式、设置页、文章阅读页
+├── tasks.md
+│   ├── [ ] 1. 在设置页增加主题切换开关（浅色 / 深色）
+│   ├── [ ] 2. 实现主题切换逻辑（localStorage + CSS 变量）
+│   ├── [ ] 3. 适配文章阅读页的深色样式
+│   ├── [ ] 4. 确保图片、代码块在深色模式下不变色
+│   └── [ ] 5. 编写单元测试（主题切换 + 持久化）
+└── specs/theme/spec.md
+    ├── ## 新增功能：主题切换
+    ├── ### 场景 1：用户手动切换主题
+    │   ├── GIVEN 用户在设置页
+    │   ├── WHEN 点击"深色模式"开关
+    │   └── THEN 页面立即切换为深色主题，且选择被保存
+    └── ### 场景 2：用户关闭深色模式
+        └── ...</code></pre>
+
+<h4>步骤 2：审查对齐——这是最关键的一步</h4>
+<pre><code>你：审阅提案，发现一个问题——"'跟随系统'这个需求我没提啊。"
+AI：基于最佳实践建议增加，如果你不需要，我可以删除。
+你：好，删除"跟随系统"，保留手动切换即可。
+AI：更新提案。
+你：确认，锁定。</code></pre>
+<p><b>此时一行代码都没写，但人和 AI 对"要做什么"已经 100% 一致。</b>这个例子还示范了一个重要设计：删除"跟随系统"这个动作，会在第三步产生实际约束——AI 不会在实现时"顺手"把它加回来，因为你显式删除了它，而规范明确写了"规范没写的就不能改"。</p>
+
+<h4>步骤 3：Spec 的六要素结构</h4>
+<pre><code># 深色模式 · 规范增量
+
+## 1. 结果（Outcomes）
+夜间阅读场景下，用户可将界面切换为深色主题。
+
+## 2. 范围（Scope）
+- 设置页主题开关（浅色 / 深色）
+- 主题状态持久化
+- 文章阅读页样式适配
+
+## 3. 非目标（Non-goals）   ← 没有非目标清单就不算准备好
+- 不实现"跟随系统"自动切换
+- 不改动导航栏配色
+- 不为第三方嵌入内容（评论区）提供深色样式
+
+## 4. 约束（Constraints）
+- 主题状态 MUST 存于 localStorage，键名 `theme`
+- 深色样式 MUST 通过 CSS 变量实现，禁止覆盖白模式样式表
+- 图片与代码块 MUST 在深色模式下保持原色
+
+## 5. 验收标准（可证伪，EARS 风格）
+WHEN 用户在设置页点击"深色模式"开关
+THE 系统 SHALL 立即应用深色主题，且不重载页面。
+
+IF localStorage 中不存在 `theme` 键
+THEN 系统 SHALL 默认使用浅色主题。
+
+WHEN 用户在深色模式下访问文章阅读页
+THE 系统 SHALL 应用深色背景与浅色正文，同时保持图片原色。
+
+## 6. 验证方式（Agent 用作证明的命令）
+- `npm test -- theme`           单元测试
+- `npm run test:e2e -- theme`   场景验收
+- `npm run build`               构建无错误</code></pre>
+
+<h4>步骤 4：实施与归档</h4>
+<pre><code>- [x] 1. 在设置页增加主题切换开关
+- [x] 2. 实现主题切换逻辑
+- [x] 3. 适配文章阅读页的深色样式
+- [ ] 4. 确保图片、代码块不变色   ← 正在执行
+- [ ] 5. 编写单元测试
+
+（全部完成后归档）
+→ specs/theme/spec.md 中的增量合并进主 specs/
+→ changes/add-dark-mode/ 移入 changes/archive/
+→ 更新主规范的版本记录</code></pre>
+<p>结果不只是"博客有了深色模式"，而是主规范被更新了。下一个开发者（或半年后的你）可以从规范里读到：深色模式是这样设计的，边界条件是这些，以及<b>为什么当初删掉了"跟随系统"</b>。</p>
+
+<h3>4.3 BDD 版本：同一个功能的场景写法</h3>
+
+<h4>仓库结构</h4>
+<pre><code>features/
+├── theme.feature
+└── steps/theme.steps.ts</code></pre>
+
+<h4>feature 文件（声明式，含失败路径）</h4>
+<pre><code>Feature: 深色模式
+  作为夜间阅读的读者
+  我想要切换界面的明暗主题
+  以便在低光环境下舒适阅读
+
+  Scenario: 用户开启深色模式
+    Given 当前主题为浅色
+    When 用户在设置页开启深色模式
+    Then 界面应用深色主题
+    And 主题偏好被持久化
+
+  Scenario: 偏好被持久化到下一次访问
+    Given 用户此前已开启深色模式
+    When 用户重新打开站点
+    Then 界面直接以深色主题呈现
+
+  Scenario: 深色模式下媒体保持原色
+    Given 当前主题为深色
+    When 用户打开一篇含图片和代码块的文章
+    Then 图片保持原始色彩
+    And 代码块保持原始色彩
+
+  Scenario: 不存在"跟随系统"选项
+    Given 用户在设置页
+    When 用户查看主题选项
+    Then 只提供浅色与深色两个选项</code></pre>
+<p class="cap">最后一条场景值得注意——它把"非目标"也变成了可执行的验收。这正是规范写得好的标志：连"不应该存在什么"都是可验证的。</p>
+
+<h4>Step definitions（交给 agent 生成的具体指令）</h4>
+<pre><code>阅读 features/theme.feature。
+在 features/steps/theme.steps.ts 中生成 Cucumber.js 的 step definitions，
+使用 @cucumber/cucumber 与 Playwright（@playwright/test）驱动运行在
+http://localhost:3000 的 Next.js 应用。
+每个唯一的 Given/When/Then 对应一个 step function。
+不要修改 feature 文件本身。</code></pre>
+<p class="cap">最后一句是针对一个真实失败模式写的：<b>agent 会修改 spec 让测试通过。</b>必须在提示词和工具层面同时把它钉死。</p>
+
+<h3>4.4 三层产物对照：一个功能，三份不同抽象层级的东西</h3>
+<p>用"加入购物车（库存限制）"这个更典型的业务例子，展示四种模式在同一功能上各自产出什么：</p>
+<div class="tw">
+<table>
+<tr><th>层级</th><th>产物</th><th>内容示例</th><th>回答的问题</th></tr>
+<tr>
+  <td><b>BDD</b><br><span style="color:var(--muted);font-size:12px">行为 / What</span></td>
+  <td>Given-When-Then 场景</td>
+  <td>Given 商品「超级组件」库存 2 件<br>When 加入 2 件到购物车<br>Then 购物车包含 2 件<br><i>（含失败路径：再加 1 件 → 显示"仅剩 2 件"，购物车仍为 2 件）</i></td>
+  <td>需求是否表达清楚了？</td>
+</tr>
+<tr>
+  <td><b>SDD</b><br><span style="color:var(--muted);font-size:12px">规范 / How + 约束</span></td>
+  <td>数据形状 + 不变式</td>
+  <td>CartItem: { productId, quantity }<br>quantity ≤ stock（不变式）<br>必须通过 store action 修改 state<br>非目标：不做跨仓库存合并</td>
+  <td>实现是否受控？</td>
+</tr>
+<tr>
+  <td><b>TDD</b><br><span style="color:var(--muted);font-size:12px">验证 / Correctness</span></td>
+  <td>单元测试</td>
+  <td>加入新商品 → 购物车数量 +1<br>重复加入 → 数量递增，不新增条目<br>库存不足 → 抛错或限制数量</td>
+  <td>结果是否正确？</td>
+</tr>
+</table>
+</div>
+<p>这个例子里，<b>第二条 BDD 场景才是全部的重点</b>——它是单元测试通常跳过、而没有 spec 的 AI 永远不会知道要去构建的那个行为。边界情况正是"当验收标准活在 ticket 里而不是 spec 里时"最容易丢失的东西。</p>
+
+<h3>4.5 几个可直接复制的最佳实践产物</h3>
+
+<h4>constitution.md（项目宪法，只写一次）</h4>
+<pre><code># 项目宪法
+
+## 不可协商的原则
+
+1. **测试先行**：任何生产代码之前必须有失败的测试。
+   缺少对应测试的生产代码变更禁止合并。
+
+2. **行为变更同 PR**：行为发生变化时，spec 与代码必须在同一个 commit 中更新。
+   spec 未出现在 diff 中，视为行为未变更。
+
+3. **依赖审批**：新增运行时依赖需要技术负责人在 PR 中显式批准。
+
+4. **可观测性默认值**：所有对外接口必须记录结构化日志（请求 ID、耗时、结果状态）。
+
+5. **安全基线**：禁止将密钥写入代码或配置文件；用户输入必须经过显式校验层。
+
+## 规格所有权
+spec 只能由人或指定的规划 agent 修改。实现 agent 无权编辑 spec 文件。
+若实现中发现 spec 有问题，输出建议并停止，等待人确认。</code></pre>
+
+<h4>AGENTS.md（常驻上下文，写一次收益上百次）</h4>
+<pre><code># 项目约定
+
+## 技术栈
+Next.js 15 + TypeScript（strict）+ Postgres + Drizzle ORM + Vitest + Playwright
+
+## 命令
+- 单元测试：`pnpm vitest run`
+- 单点测试：`pnpm vitest run -t "&lt;测试名&gt;"`
+- 端到端：`pnpm playwright test`
+- 类型检查：`pnpm tsc --noEmit`
+- 一个任务的收尾标准：以上全部绿色
+
+## 测试规范
+- 覆盖率高优先级流：认证与支付必须 100% 行覆盖
+- 命名用行为描述：`should reject when quantity exceeds stock`
+- 禁止出现 `test('it works')` 这类命名
+- 禁止提交 `.only`
+
+## 绝对不可以
+- 不要发明验收标准。规格没写的验收条件，先提问。
+- 不要在有失败测试的情况下继续写新功能。
+- 不要修改 spec 文件。
+- 不要吞掉异常。</code></pre>
+<p class="cap">如果你还没有 AGENTS.md / CLAUDE.md，<b>写一个就是本周最高杠杆的动作</b>——它本身就能消除大量漂移，因为 agent 不再每个任务从零重新发明你的约定。</p>
+
+<h4>TDD 测试计划生成提示词</h4>
+<pre><code>你是一位严格实践测试驱动开发的资深工程师。
+给定以下功能描述：
+
+[功能描述]
+
+生成一份完整的 TDD 测试计划，包含：
+1. 所有核心函数与边界情况的单元测试
+2. 组件交互的集成测试
+3. 关键用户流程的端到端测试
+4. 错误 / 失败场景测试
+5. 性能边界测试
+
+每个测试给出：测试名（描述行为）、输入条件、预期输出 / 行为、这个测试为什么重要。
+
+不要写实现——只输出测试计划。</code></pre>
+<p class="cap">关键约束是最后一句。让 AI 一次只做一件事，是防止它"一口气给出完整方案"的最有效手段。</p>
+
+<!-- ============ 5 ============ -->
+<h2 id="s5"><span class="num">5</span>失败模式与争议</h2>
+
+<p class="lead">这一节是报告里最实用的部分。SDD 的相关实践失败，绝大多数不是"模型不够聪明"，而是十几类可预测、可预防的流程问题。</p>
+
+<h3>5.1 十二类失败模式</h3>
+<div class="tw">
+<table>
+<tr><th>#</th><th>失败模式</th><th>表现</th><th>修复</th></tr>
+<tr><td>1</td><td><b>规范漂移</b><br>（Thoughtworks 认定的首要失败模式）</td><td>代码改了、spec 没改。三个 agent PR 之后文件还写着"折扣在服务端计算"，而逻辑已经"为了更快"挪到客户端。下一个 agent 读到契约，把正确的决策当 bug 改回去。</td><td>行为变化时 spec 与代码同 commit；spec 不在 diff 里则评审者可假设行为未变——而这是错的</td></tr>
+<tr><td>2</td><td><b>过度规格化</b></td><td>spec 写得像伪代码，agent 失去自由度，任何偏离都被当作 bug。Anthropic 的 harness 论文指出：单个功能的 spec 超过约 <b>800 行</b>后，agent 在新颖任务上的吞吐急剧下降。</td><td>匹配规格重量与工作重量。一行修复的 spec 就是 commit message 里的一句话。</td></tr>
+<tr><td>3</td><td><b>不可证伪的需求</b></td><td>"系统要快"而非"p95 延迟在 1000 RPS 下低于 200ms"。agent 会以满足字面文本、别的什么都不满足的方式实现它。</td><td>写完每条标准问自己："我现在能写出一条确定性测试吗？"不能就重写。</td></tr>
+<tr><td>4</td><td><b>让 agent 编辑 spec</b></td><td>一旦某个 agent 重写 spec.md 让测试通过，契约就没了。这通常表现为"测试莫名其妙全绿了"。</td><td>spec 变更权独占。工具层和提示词层双重禁止，CI 检测 spec 文件是否被实现 agent 修改。</td></tr>
+<tr><td>5</td><td><b>假绿测试</b></td><td>AI 先写完代码，再被要求"补覆盖率"。它编码的是<b>事实</b>而不是<b>意图</b>；更糟的是它会弱化断言让流水线通过。绿色意味着测试同意了补丁，而不是同意了契约。</td><td>验收标准先于代码存在；测试可追溯到 spec 条目；评审者可以问"这条测试检查的是契约的哪一条"——答不上来就是装饰。</td></tr>
+<tr><td>6</td><td><b>把 SDD 当瀑布</b></td><td>spec 写一次、冻结、交给下游实施六个月。循环从分钟级退化到周级。</td><td>spec 是主权者，但它也是活的。如果 spec 在第一次 agent 运行后不能改，你就重新发明了行业花了三十年才逃出来的瀑布。</td></tr>
+<tr><td>7</td><td><b>规范过于宽泛</b></td><td>"优化一下结账"、"清理一下授权"、"改得像现代 SaaS"。对人这是一句对话开场白，对 agent 这是一张重写整个模块的许可证。宽泛的 spec 产出宽泛的补丁、宽泛的评审，以及没人主动选择的架构漂移。</td><td>一个 spec 一个行为变更；非目标写成清单；限制目录与公开接口范围。</td></tr>
+<tr><td>8</td><td><b>双重真相来源</b></td><td>wiki、README、spec.md 三者互相矛盾，agent 挑最方便的那个。</td><td>spec 必须在仓库里、版本可控、与行为同一 commit 变更。放在 wiki、共享盘或项目管理工具里的 spec 会在一两个 sprint 内失同步。</td></tr>
+<tr><td>9</td><td><b>腐烂的宪法</b></td><td>规则没人执行，于是模型学会了忽略它。这是最隐蔽的一种——它教坏了 agent。</td><td>宪法要短（3–5 条），且每条都有对应的自动检查或明确的评审动作。</td></tr>
+<tr><td>10</td><td><b>评审错的产物</b></td><td>在格式和风格上留评论，而<b>验收标准本身是错的</b>。</td><td>把 spec 放在代码 diff 上方。先接受或拒绝意图，再看实现。</td></tr>
+<tr><td>11</td><td><b>没人签字的 agent 草稿</b></td><td>由 agent 起草、没有人读过的 spec 充当真相来源。</td><td>模型起草契约是有用的；但<b>一份没人读过的真相来源，等于多了一个文件的 vibe coding</b>。意图的签字权留给为事故买单的人。</td></tr>
+<tr><td>12</td><td><b>审查过载</b></td><td>重型框架每个阶段都生成大量文档，开发者审查规范文件花的时间和精力远超直接审代码。SDD 本想减少返工、提升效率，结果变成了额外负担。</td><td>spec 必须能一口气读完。用判断标准："评审这份 spec 是否比直接实现它更便宜？"</td></tr>
+</table>
+</div>
+
+<h3>5.2 争议：SDD 是"越改越坏的改进"吗</h3>
+
+<p>SDD 在 2025–2026 年成为热点的同时，也收到了来自行业内部的严肃批评。这些批评必须被完整呈现，否则任何 SDD 的采纳都会在第一次受挫时就崩掉。</p>
+
+<h4>批评一：Böckeler 的 Verschlimmbesserung</h4>
+<p>Thoughtworks 的 Birgitta Böckeler 在那篇被广泛引用的分析里，用德语词 <b>Verschlimmbesserung</b> 形容 SDD——意思是"越改越坏的改进"。她给出的核心发现是：<b>SDD 的层级越高，理论上收益越大，但实际应用中遇到的问题也越多。</b>她同时点出了一个反直觉的观察：不少人认为规范越详细 AI 就越听话、执行越精准，但实测结果恰恰相反——<b>AI 依然会忽视指令、过度执行，规范的冗长程度与 AI 的遵从程度之间没有线性关系。</b></p>
+
+<h4>批评二：它是换了名字的瀑布</h4>
+<p>一个被反复提出的论证链：SDD 本质上重现了瀑布方法——大设计前置、穷尽式规格、假设充分的规划能消除执行不确定性。有人做了实测对照：一次实践需要 <b>33 分钟、2,577 行 markdown</b> 才产出 689 行代码，对比迭代提示方法的 <b>8 分钟</b>——约慢 10 倍，且质量无提升。</p>
+<p>更根本的反驳是<b>规格的非确定性</b>：SDD 把规格当作权威真相来源，但 LLM 是非确定性的——同一个规格在不同运行中产出不同实现，架构选择、数据结构、错误处理都会变。这意味着规格<b>无法像源代码那样充当可靠的真相来源</b>。</p>
+
+<h4>批评三：模型驱动开发的重复</h4>
+<p>Böckeler 自己就指出 L3 与二十年前的 MDE 的相似性。当年人们用 UML 或 DSL 写模型、用定制生成器产代码，它从未在业务应用上普及。现在 LLM 替换了生成器：抽象层级别扭的问题解决了，但代价是非确定性。历史是否重演尚待观察。</p>
+
+<h4>采纳的现实成本</h4>
+<div class="mgrid">
+  <div class="m"><span class="l">引入期经历生产力下降的团队</span><div class="n">67<small>%</small></div></div>
+  <div class="m"><span class="l">ROI 典型周期</span><div class="n">3–6<small> 个月</small></div></div>
+  <div class="m"><span class="l">单功能 TCO（含评审与返工）</span><div class="n">$150<small>–400</small></div></div>
+  <div class="m"><span class="l">工具成本</span><div class="n">$0<small>–39/用户/月</small></div></div>
+</div>
+
+<div class="note">
+<span class="tag">我的判断</span>
+<p>SDD 的价值不在于"文档"，而在于三件事：<b>把决策前置到它还很便宜的时候</b>、<b>让变更可追溯</b>、<b>给 agent 一个它自己无法定义的退出条件</b>。前两条是老生常谈，第三条是 AI 时代新增的、也是唯一不可替代的。</p>
+<p>它在实践中失败的原因几乎总是同一个：<b>人不维护 spec</b>。这不是方法论的缺陷，是纪律的缺陷——而讽刺的是，SDD 的批评者与拥护者在这里其实是一致的：都承认"一份没人维护的 spec 比没有 spec 更糟，因为它主动误导"。</p>
+<p>最务实的结论来自实践者：<b>工具选择远不如产物质量重要。</b>一份含糊的 Kiro 验收标准和一份含糊的 prompt 一样会漂移；一份五十任务的 Spec Kit 计划在任何 agent 下都像瀑布。真正可移植的实践是这几条——spec 能一口气读完、显式写出非目标、每个任务的 diff 人类可读、合并前对照验收标准验证、实现过程中发现更好的路径时回头更新 spec。</p>
+</div>
+
+<!-- ============ 6 ============ -->
+<h2 id="s6"><span class="num">6</span>工具生态与选型</h2>
+
+<h3>6.1 主流工具对照</h3>
+<div class="tw">
+<table>
+<tr><th>工具</th><th>架构层 / 层级</th><th>许可</th><th>最适合</th><th>主要失败模式</th></tr>
+<tr><td><b>GitHub Spec Kit</b></td><td>仓库原生 SDD（L1 Spec-first）</td><td>开源 MIT</td><td>团队想要跨多个编码 agent 的显式治理；绿地产品；多编辑器混用</td><td>Markdown 与评审开销</td></tr>
+<tr><td><b>OpenSpec</b></td><td>轻量变更提案 + 局部 spec delta（L2 Spec-anchored）</td><td>MIT</td><td>棕地工作的渐进式改造；低仪式引入</td><td>系统性治理较弱</td></tr>
+<tr><td><b>AWS Kiro</b></td><td>IDE 原生 spec 工作流（需求 / 设计 / 任务 + steering + hooks）</td><td>专有</td><td>AWS 原生环境、有合规追踪压力、想要引导式 IDE 体验</td><td>工具与云锁定</td></tr>
+<tr><td><b>Superpowers</b></td><td>执行层：强制技能包（brainstorm → plan → TDD → review）</td><td>MIT</td><td>单人 / 小队希望"默认就有纪律"，而不是依赖每日自觉</td><td>工作流与任务不匹配时显得教条</td></tr>
+<tr><td><b>BMAD-METHOD</b></td><td>意图层：多角色 agent 模拟（21 个专职 agent）</td><td>开源</td><td>大型绿地、协调痛感已经很强烈的团队</td><td>流程开销（其他地方过重）</td></tr>
+<tr><td><b>Tessl</b></td><td>L3 Spec-as-source，spec 即源码</td><td>专有（公测）</td><td>高标准化、愿押注前沿的实验性场景</td><td>锁定最强、社区小、同时承担"灵活性不足 + 非确定性"双重缺点</td></tr>
+<tr><td><b>Claude Code Skills / AGENTS.md</b></td><td>DIY 最轻量层</td><td>—</td><td>单人、已有代码库、小改动；快速自定义</td><td>无强制流程，质量完全取决于作者纪律，容易漂回 vibe coding</td></tr>
+<tr><td><b>GSD</b></td><td>上下文工程 + 薄编排，防 context rot</td><td>开源</td><td>长时运行的 AI 编码会话</td><td>需要正式团队治理时帮助有限</td></tr>
+</table>
+</div>
+<p class="cap">一个共同规律：<b>流程在歧义代价高的地方有帮助，在反馈速度更重要的地方有害。</b>让工具重量匹配任务重量，而不是匹配热度。</p>
+
+<h3>6.2 三层架构视角</h3>
+<p>比 star 数更有用的问法是：这个工具作用在哪一层？</p>
+<div class="tw">
+<table>
+<tr><th>层</th><th>回答的问题</th><th>工具</th></tr>
+<tr><td><b>意图层</b></td><td>我们要建什么，什么算完成？</td><td>Spec Kit（仓库原生 + 治理）、OpenSpec（轻量 delta）、Kiro（IDE 内嵌）、BMAD（多 agent 生命周期）</td></tr>
+<tr><td><b>执行层</b></td><td>agent 干活时的行为是怎样的？</td><td>Superpowers（强制组合式技能）、GSD（上下文工程）、HVE Core（按 Copilot 的 RPI：Research → Plan → Implement → Review）</td></tr>
+<tr><td><b>编排层</b></td><td>谁来做，agent 之间如何协调？</td><td>多智能体框架、worktree 隔离（Spec Kitty 首创内建 git worktree 支持）</td></tr>
+</table>
+</div>
+
+<h3>6.3 决策路由</h3>
+<div class="tw">
+<table>
+<tr><th>你的情况</th><th>从这里开始</th></tr>
+<tr><td>单人 / 已有代码库 / 小功能</td><td>Claude Code skills 或 OpenSpec —— 短的 requirements、最少的 tasks、一个评审检查点。<b>不要为五十行的改动套完整的 Spec Kit 目录树。</b></td></tr>
+<tr><td>单人 / 绿地 / 跨多个会话</td><td>Spec Kit 或一个维护良好的 SDD skill —— 持久的产物胜过 IDE 的体贴</td></tr>
+<tr><td>小队 / 编辑器混用</td><td>Spec Kit —— markdown 进 Git、PR 评审、每个开发者用自己的 agent 执行</td></tr>
+<tr><td>企业 / AWS 原生 / 合规压力</td><td>Kiro —— 引导式产物、可追溯性、hooks。<b>工具能减轻审计负担，但不替代审计。</b></td></tr>
+<tr><td>棕地 bugfix</td><td>OpenSpec 或轻量 skill —— 每个 bugfix 都走完整仪式会像瀑布</td></tr>
+<tr><td>绿地产品 / 多个 agent 触碰同一仓库</td><td>Spec Kit —— 当 Copilot、Claude Code、Cursor 同时工作时，可移植性胜过 IDE 打磨</td></tr>
+<tr><td>想要"强制纪律"而不是"建议纪律"</td><td>Superpowers —— 用一点可调性换取不依赖自觉的强制循环</td></tr>
+<tr><td>追求最低 token 开销</td><td>OpenSpec 或轻量 skill</td></tr>
+<tr><td>需要最大规模的建设流程</td><td>BMAD-METHOD</td></tr>
+</table>
+</div>
+
+<div class="note quiet">
+<span class="tag">一条被反复验证的经验</span>
+<p>没有一个工具能替代写一份好 spec。它们都会忠实地生成错误的东西，如果你让它们这么做的话。</p>
+<p>另外值得一提的是：<b>用规范工具的人里，很多人其实在没有意识到的情况下已经在做轻量 SDD 了</b>——那些详细写项目上下文、约定和约束、让 agent 每次会话都读的 CLAUDE.md / AGENTS.md 文件，结构上和 SDD 是同一个想法，只是没那么形式化。</p>
+</div>
+
+<!-- ============ 7 ============ -->
+<h2 id="s7"><span class="num">7</span>90 天落地路线图</h2>
+
+<p class="lead">这套方法是逐步长出来的，不是一次性引入的。以下节奏来自多个企业采纳案例的共同模式。</p>
+
+<div class="steps">
+  <div class="step">
+    <h4>第 1 周：写下常驻上下文</h4>
+    <p class="io">在主仓库写 <b>constitution / AGENTS.md</b>，3–5 条非可协商原则：测试覆盖阈值、依赖审批规则、可观测性默认值、安全基线。</p>
+    <p class="io" style="margin-top:6px">这一步的收益被严重低估——它单独就消除大量漂移，因为 agent 不再每个任务重新发明你的约定。</p>
+  </div>
+  <div class="step">
+    <h4>第 2 周：一个功能，走完整流程</h4>
+    <p class="io">挑一个你本来会 vibe 掉的非平凡功能，写六要素 spec（含非目标），跑单 agent 端到端。</p>
+    <p class="io" style="margin-top:6px">目的不只是交付这个功能，而是<b>校准你对"写一份足够好的 spec 需要多少工作量"的估算</b>。</p>
+  </div>
+  <div class="step">
+    <h4>第 3–4 周：加入验证 agent，开始度量</h4>
+    <p class="io">加第二个（验证）agent，度量<b>返工率</b>。这是唯一能告诉你这套方法在你的代码库里是否真的有效的指标。</p>
+  </div>
+  <div class="step">
+    <h4>第 5–12 周：扩展到多智能体</h4>
+    <p class="io">只有在单 agent 和双 agent 运行都稳定之后，才扩到 swarm。<b>从 2 个跳到 4 个 agent 是大多数团队引入协调 bug 的地方。</b></p>
+    <p class="io" style="margin-top:6px">到季度末，一个四人的工程团队应该能以 SDD 管理的方式每个 sprint 交付 2–3 个功能，缺陷率有可度量的改善——改善幅度高度依赖 spec 纪律。</p>
+  </div>
+  <div class="step">
+    <h4>持续：把瓶颈从写作速度转到评审一致性</h4>
+    <p class="io">发布一份短的内部指南，标题类似《我们在 XX 怎么写 spec》。因为规模化之后，瓶颈很快从"写得慢"变成"每个人评审标准不一致"。</p>
+  </div>
+</div>
+
+<h3>预算与度量</h3>
+<div class="tw">
+<table>
+<tr><th>项目</th><th>参考值</th></tr>
+<tr><td>工具链搭建</td><td>1 个工程师周</td></tr>
+<tr><td>每个功能的 spec 撰写</td><td>约 0.5 工程师周</td></tr>
+<tr><td>须长期跟踪的指标</td><td>返工率 · 合并后缺陷密度 · spec 漂移检出率 · 首次正确实现耗时</td></tr>
+</table>
+</div>
+
+<h3>Definition of Ready（进入实现前必须齐备）</h3>
+<ul>
+  <li>目标与非目标都已写出，且非目标是<b>清单</b>形式</li>
+  <li>场景已由业务方确认并签字</li>
+  <li>若涉及边界变动，附上可执行契约的链接（OpenAPI / 类型定义 / 场景文件）</li>
+  <li>列出 agent 将用作"证明"的命令（测试、类型检查、构建）</li>
+  <li>限制条件已声明：涉及的目录范围、不允许改动的公开接口</li>
+</ul>
+<p class="cap">无法列出非目标，说明 spec 还没准备好——即使文本已经很长了。</p>
+
+<h3>本周就能做的三件事</h3>
+<ol>
+  <li><b>如果你还没有 AGENTS.md / CLAUDE.md，写一个。</b>用上面的模板骨架，填上你的技术栈、命令、测试规范和"绝对不可以"清单。</li>
+  <li><b>把下一个非平凡功能先写成 spec。</b>注意有多少你原本会在代码评审里才发现的问题，现在在写作 spec 时就被发现了——那时它还只是一句话，而不是一个需要重做的 diff。</li>
+  <li><b>保留探索通道但显式交接。</b>探索工作继续 vibe coding；一旦 spike 教会你这件事的形状，停下来、提炼 spec、按 spec 重建生产版本。</li>
+</ol>
+
+<!-- ============ 8 ============ -->
+<h2 id="s8"><span class="num">8</span>决策速查</h2>
+
+<div class="tw">
+<table>
+<tr><th>场景</th><th>该用</th><th>不该用</th></tr>
+<tr><td>快速原型验证想法</td><td>Vibe Coding</td><td>完整 SDD 流程</td></tr>
+<tr><td>一次性数据处理脚本</td><td>Vibe Coding</td><td>BDD 场景、constitution</td></tr>
+<tr><td>技术可行性探索 / spike</td><td>Vibe Coding，结束后提炼 spec</td><td>让 spike 产出进生产</td></tr>
+<tr><td>个人小工具</td><td>Vibe Coding + 轻量 AGENTS.md</td><td>多 agent 编排</td></tr>
+<tr><td>生产环境核心业务代码</td><td>SDD + BDD + TDD 全套</td><td>纯 prompt 迭代</td></tr>
+<tr><td>多人协作（&gt;2 人）</td><td>SDD（spec 进 Git、PR 评审）</td><td>把需求留在对话历史里</td></tr>
+<tr><td>持续迭代 &gt;3 个月</td><td>SDD L2 Spec-anchored</td><td>SDD L1（spec 用完即弃）</td></tr>
+<tr><td>棕地改造</td><td>OpenSpec 式 delta 规格</td><td>完整的 upfront 规格树</td></tr>
+<tr><td>涉及安全 / 合规 / 支付</td><td>SDD + ATDD + constitution 安全条款 + 变异测试</td><td>无验收门禁的 agent 自主运行</td></tr>
+<tr><td>一行 bug 修复</td><td>commit message 就是 spec</td><td>完整的 specify / plan / tasks 三段式</td></tr>
+<tr><td>UI 视觉探索</td><td>Vibe Coding</td><td>SDD（spec 无法有效约束视觉选择）</td></tr>
+<tr><td>需求本身还不确定</td><td>先做 Discovery 阶段</td><td>现在写 spec（会产出要么太模糊、要么频繁重写的东西）</td></tr>
+</table>
+</div>
+
+<div class="note">
+<span class="tag">最后一句话</span>
+<p>AI 编码 agent 不会变得更弱，它们会变得更快、更自主。这意味着<b>把它们指向错误目标的代价在持续上升</b>。</p>
+<p>在 2026 年做对这件事的团队，不是那些 prompt 写得最巧的团队，而是那些在 agent 跑起来之前就已经决定好"done"是什么意思的团队。方法是：<b>写 spec，让它成为主权者，让它保持活着。</b></p>
+</div>
+
+<footer>
+<h4 style="margin-top:0">参考来源</h4>
+<ol>
+  <li>Simon Willison, "Not all AI-assisted programming is vibe coding (but vibe coding rocks)", simonwillison.net, 2025-03-19</li>
+  <li>Andrej Karpathy, 关于 vibe coding 的原始表述, 2025-02-06；agentic engineering 表述, 2026-04</li>
+  <li>Wikipedia / HandWiki, "Vibe coding"（含 Collins 2025 年度词汇、YC W25 数据、Lovable 安全事件、Veracode 2025-10 研究、Torvalds 2026-01 案例）</li>
+  <li>GitClear, 6.23 亿次代码变更的结构性分析, 2026-01</li>
+  <li>Stack Overflow Developer Survey 2025（近 50,000 名受访者）</li>
+  <li>METR, AI 工具对资深开源开发者生产力的随机对照试验, 2025-07</li>
+  <li>Google DORA Report 2025</li>
+  <li>Birgitta Böckeler (Thoughtworks), 关于 spec-driven development 三个层级的分析, martinfowler.com；含 Verschlimmbesserung 评价</li>
+  <li>GitHub Spec Kit 官方文档与仓库（workflow、constitution、slash 命令、模板体系）</li>
+  <li>AWS Kiro 官方文档（requirements.md / design.md / tasks.md、Requirements-First 与 Design-First、steering 与 hooks）</li>
+  <li>Alistair Mavin et al., "EARS: The Easy Approach to Requirements Syntax", IEEE RE'09；Kiro 于 2025 年将其纳入原生需求记法</li>
+  <li>Dan North, "Introducing BDD", 2006；Chris Matts, Given-When-Then, 2004；Aslak Hellesøy, Cucumber, 2008</li>
+  <li>Kent Beck, 《Test-Driven Development: By Example》, 2002；关于 AI 时代 TDD 的公开表述</li>
+  <li>CodeMySpec, "BDD Specs for AI-Generated Code"（含 Böckeler 关于 spec-by-example ≈ few-shot prompting 的类比、arXiv 关于规格可减少 50% 错误的结论）</li>
+  <li>Azalio, "How agile practices ensure quality in GenAI-assisted development"（TDD / BDD / ATDD / 结对编程的 AI 化改造与实际案例）</li>
+  <li>CodeSoupCafe, "Enterprise Test-Driven Development Powered by Specification-Driven Development"（七阶段 Charted Coding 工作流、TDD Guard、LeanSpec）</li>
+  <li>SpecsWriter, "What is spec-driven development for AI agents in 2026"（五类失败模式、Anthropic harness 论文 800 行阈值、ROI 与成本区间）</li>
+  <li>AI Wiki, "Spec-driven development"（收益数字、限制、采纳模式、宪法式 SDD 与 73% 安全缺陷下降）</li>
+  <li>DevOpsTales, "Spec Kit vs Kiro vs Claude Code: Picking an SDD Setup by Tradeoff, Not Hype"（工具对照与决策路由）</li>
+  <li>cameronsjo/spec-compare（SDD 工具成熟度分层、git worktree 支持、版本盘点）</li>
+  <li>Adil Sadqi, "Spec-Driven Development: When Structure Helps and When It Becomes Tax"（六阶段生命周期与三层架构视角）</li>
+  <li>Flexing Forks, "After BDD: The Dev Philosophy Shift That Changes Everything"（四级抽象阶梯、Kent Beck / Dave Farley / Fowler 团队观点）</li>
+  <li>Augment Code, "Vibe Coding vs Spec-Driven Development (2026): When to Use Each"（YC W25 数据、GitClear 研究引用、四阶段验证门禁）</li>
+  <li>华为云社区, 《告别 Vibe Coding：为什么 SDD 才是 AI 项目开发的正确打开方式》（棕地案例与四个对比维度）</li>
+  <li>generalzy / CSDN, 《从 TDD 到 SDD：当"代码"不再是核心资产》（BDD / SDD / TDD 三层分工与购物车完整示例）</li>
+  <li>agenticskillset.org, "Defining Acceptance Criteria And Constraints"（agent 可验证标准的三个属性、GWT 案例）</li>
+</ol>
+<p style="margin-top:16px">本报告基于公开资料整理，观点性判断已在正文中标注来源或明确标为作者判断。所有引用的数据均来自上述来源，未做外推。</p>
+</footer>
+
+</div>
+</body>
+</html>

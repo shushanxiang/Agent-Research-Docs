@@ -332,19 +332,7 @@ python -m eval.run_eval --mode e2e --topic "规范驱动开发SDD与AGENTS.md的
 
 ---
 
-## 11. 相关文档
-
-- `backend/模型配置说明.md` —— 前后端模型列表（`AVAILABLE_MODELS`）配置
-- `docs/架构决策ADR/` —— 关键架构决策记录
-- `docs/评估框架ReadMe.md` —— 评估框架说明
-- `docs/测试指引.md` —— 测试编写与运行指引
-- `docs/大模型安全设计.md` —— 安全设计说明
-- `docs/项目工作量.md` —— 项目工作量记录
-- `README_1.3.md` —— 快速入门文档
-
----
-
-## 12. 安全提示
+## 11. 安全提示
 
 - **请勿将真实 API Key / 数据库口令提交到 Git**。若项目需要开源或分享，请先将其中的 `APP_TOKEN`、`LANGSMITH_API_KEY`、`MCP_APP_ID` 等替换为占位符（如 `sk-xxxx`），并把 `.env` 加入 `.gitignore`。
 - 初始账号（`zhangsan` / `lisi`）密码与用户名相同，**部署到公网前请修改或删除**。

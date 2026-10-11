@@ -18,6 +18,8 @@ author：书山香
 4. **安全与可信**：提示注入检测 + 双层参数校验（类型校验 + **9 类业务规则**）+ **4 种循环检测**（单任务上限 **15 步**），防止恶意输入与失控。
 5. **效果评测与运营**：搭建 L1 执行 / L2 安全 / L3 LLM-Judge 三层评测（**20+ 项指标**）与 **P0/P1/P2 三级质量门禁**，Judge 与主模型异族防自审，量化效果、驱动迭代。
 
+![项目演示视频](https://github.com/shushanxiang/Agent-Research-Docs/blob/main/Copilot%20AI%20%E9%A1%B9%E7%9B%AE/agent-copilot.mp4)
+
 ---
 
 # copilot AI项目说明文档（v1.3）

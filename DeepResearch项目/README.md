@@ -16,7 +16,7 @@ author：书山香
 3. **流式体验与工程稳定性（可落地）**：基于 Redis Streams 实现异步任务队列 + SSE token 级实时推送，配合 20+ 类瞬态 / 永久异常分类、指数退避重试、令牌桶限流与缓存降级，保障长任务体验流畅、系统稳定运行。
 4. **多 Agent 编排 + RAG 检索（技术底座）**：将单体图重构为「计划 → 研究 → 写作」3 个子图，实现 Plan-and-Execute、Reflection 反思、Critic-Writer 辩论循环；基于 Milvus 构建事实知识库，引入交叉编码器重排 + 4 档生命周期管理（5 类事实按 TTL 7~180 天分级过期），提升检索相关性与时效性。
 
-![项目演示]（./deepresearch-promo-vo.mp4）
+[项目演示]（[./deepresearch-promo-vo.mp4](https://github.com/shushanxiang/Agent-Research-Docs/blob/main/DeepResearch%E9%A1%B9%E7%9B%AE/deepresearch-promo-vo.mp4)）
 
 ---
 # DeepResearch · 全面版（README v1.3）
